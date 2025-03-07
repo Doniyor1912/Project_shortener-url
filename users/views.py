@@ -1,12 +1,12 @@
-from drf_spectacular.utils import extend_schema
-from rest_framework import status, generics
+from rest_framework import generics, status
+from rest_framework.authtoken.models import Token
 from django.contrib.auth import login
-
-from .serializers import Registration, LoginSerializer, LogoutSerializer
+from .serializers import Registration, LoginSerializer
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
+from rest_framework.authentication import TokenAuthentication
 
-@extend_schema(summary='Create Register Users', tags=['Users'])
 
 class RegisterView(generics.CreateAPIView):
     serializer_class = Registration
@@ -21,29 +21,33 @@ class RegisterView(generics.CreateAPIView):
 
 
 
-@extend_schema(summary='Create user login', tags=['Users'])
+
 class LoginView(generics.CreateAPIView):
     serializer_class = LoginSerializer
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            user = serializer.validated_data['user']
-            login(request, user)  # Log the user in
-            return Response({"message": "Login successful."}, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.is_valid(raise_exception=True)
+
+        user = serializer.validated_data["user"]
+        login(request, user)
+
+        token, created = Token.objects.get_or_create(user=user)
+
+        return Response(
+            {"status":True, "message": "Login successful.", "auth_token": token.key},
+            status=status.HTTP_200_OK
+        )
 
 
 
 
-@extend_schema(summary=' Create user logout', tags=['Users'])
 
-class LogoutView(generics.CreateAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = LogoutSerializer
+class LogoutView(APIView):
+    # authentication_classes = [TokenAuthentication]  # Requires authentication
+    # permission_classes = [IsAuthenticated]  # Only logged-in users can log out
 
-    def create(self, request, *args, **kwargs):
-        if hasattr(request.user, 'auth_token'):
-            request.user.auth_token.delete()
-        return Response({"message": "Successfully logged out."}, status=status.HTTP_200_OK)
+    def post(self, request):
+        request.user.auth_token.delete()
+        return Response({"message": "Logout successful."}, status=status.HTTP_200_OK)
 

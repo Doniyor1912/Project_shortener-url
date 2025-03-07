@@ -1,0 +1,213 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linkly - URL Shortener</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+    <style>
+
+
+    </style>
+
+
+</head>
+<body>
+    <main class="main">
+        <header class="header">
+            <nav class="navbar navbar-dark">
+                <div class="d-flex align-items-center">
+                    <h1 class="main-logo">
+                        <img src="../static/images/Linkly.png" alt="Linkly Logo">
+                        <sup class="r-icon">®</sup>
+                    </h1>
+                </div>
+                <div class="user-btns">
+                    <button class="btn-login" id="login">
+                        <span class="login-text">Login</span> 
+                        <i class="fas fa-sign-in-alt login-icon"></i>
+                    </button>
+                    <button class="btn-register" id="register"> 
+                        <span class="register-text">Register Now</span> 
+                    </button>
+                </div>
+            </nav>
+        </header>
+    
+    <!--------------------------------------------------------------------------------------------------------------->
+    
+        <section>
+            <div class="container">
+                <h1 class="text-center">Shorten Your Loooong Links :)</h1>
+                <div class="center-container">
+                    <p class="p-text">Linkly is an efficient and easy-to-use URL shortening service that streamlines your online experience</p>
+                </div>
+                <div class="input-wrapper">
+                    <div class="input-container">
+                        <span class="icon">🔗</span>
+                        <input type="text" class="url-input" id="input_url" placeholder="Enter the link here">
+                        <button class="shorten-btn" id="submit_btn" >Shorten Now !</button>
+                    </div>
+                </div>
+                <div class="center-container1">
+                    <p id="shortenedLink">You can create <span class="zero_five">05</span> more links. Register Now to enjoy Unlimited usage </p>
+                </div>
+            </div>
+        </section>
+    <!------------------------------------------------------------------------------------------------------------------>
+        <section>
+            <div class="container ">
+                <table id="myTable" class="table table-dark  table-striped hover">
+                    <thead>
+                        <tr>
+                            <th>Short Link</th>
+                            <th>Original Link</th>
+                            <th>QR Code</th>
+                            <th>Clicks</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                        
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <span id="shortLink" style="font-size: 17px;">https://linkly.com/zT09B0</span>
+                                <button style="border-radius: 5px;" onclick="copyToClipboard('shortLink')" class="btn btn-sm btn-outline-light">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </td>
+                            <td>
+                                <h6 style="font-size: 18px;">
+                                    <i class="fab fa-youtube"></i>
+                                    https://www.youtube.com
+                                </h6>
+                            </td>
+                            <td><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT76W5Cm7CAO6_wSXxRNZsMHY4i6vkDHAIhq1D_DYvmDAzUjmth2AdwS6-IkBzDJzLg4BY&usqp=CAU" alt="QR Code" width="30"></td>
+                            <td>4313</td>
+                            <td><span style="color: green; font-weight: bold;">Active <i class="fas fa-link"></i></span></td>
+                            <td>Feb 10 2021</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span id="shortLink" style="font-size: 17px;">https://linkly.com/h1BpT7</span>
+                                <button onclick="copyToClipboard('shortLink')" class="btn btn-sm btn-outline-light">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </td>
+                            <td>
+                                <h6 style="font-size: 18px;">
+                                    <i class="fab fa-telegram"></i>
+                                    https://www.telegram.com
+                                </h6>
+                            </td>
+                            <td><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT76W5Cm7CAO6_wSXxRNZsMHY4i6vkDHAIhq1D_DYvmDAzUjmth2AdwS6-IkBzDJzLg4BY&usqp=CAU" alt="QR Code" width="30"></td>
+                            <td>4313</td>
+                            <td><span style="color: green; font-weight: bold;">Active <i class="fas fa-link"></i></span></td>
+                            <td>Feb 10 2021</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span id="shortLink" style="font-size: 17px;">https://linkly.com/tWF3dn</span>
+                                <button onclick="copyToClipboard('shortLink')" class="btn btn-sm btn-outline-light">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </td>
+                            <td>
+                                <h6 style="font-size: 18px;">
+                                    <i class="fab fa-twitter"></i>
+                                    https://www.twitter.com
+                                </h6>
+                            </td>
+                            <td><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT76W5Cm7CAO6_wSXxRNZsMHY4i6vkDHAIhq1D_DYvmDAzUjmth2AdwS6-IkBzDJzLg4BY&usqp=CAU" alt="QR Code" width="30"></td>
+                            <td>4313</td>
+                            <td><span style="color: green; font-weight: bold;">Active <i class="fas fa-link"></i></span></td>
+                            <td>Feb 10 2021</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span id="shortLink" style="font-size: 17px;">https://linkly.com/bnqcOd</span>
+                                <button onclick="copyToClipboard('shortLink')" class="btn btn-sm btn-outline-light">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </td>
+                            <td>
+                                <h6 style="font-size: 18px;">
+                                    <i class="fab fa-github"></i>
+                                    https://www.github.com
+                                </h6>
+                            </td>
+                            <td><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT76W5Cm7CAO6_wSXxRNZsMHY4i6vkDHAIhq1D_DYvmDAzUjmth2AdwS6-IkBzDJzLg4BY&usqp=CAU" alt="QR Code" width="30"></td>
+                            <td>4313</td>
+                            <td><span style="color: green; font-weight: bold;">Active <i class="fas fa-link"></i></span></td>
+                            <td>Feb 10 2021</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span id="shortLink" style="font-size: 17px;">https://linkly.com/cO3dnq</span>
+                                <button onclick="copyToClipboard('shortLink')" class="btn btn-sm btn-outline-light">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </td>
+                            <td>
+                                <h6 style="font-size: 18px;">
+                                    <i class="fab fa-linkedin"></i>
+                                    https://www.linkedin.com
+                                </h6>
+                            </td>
+                            <td><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT76W5Cm7CAO6_wSXxRNZsMHY4i6vkDHAIhq1D_DYvmDAzUjmth2AdwS6-IkBzDJzLg4BY&usqp=CAU" alt="QR Code" width="30"></td>
+                            <td>4313</td>
+                            <td><span style="color: green; font-weight: bold;">Active <i class="fas fa-link"></i></span></td>
+                            <td>Feb 10 2021</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span id="shortLink" style="font-size: 17px;">https://linkly.com/b41cO3</span>
+                                <button onclick="copyToClipboard('shortLink')" class="btn btn-sm btn-outline-light">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </td>
+                            <td>
+                                <h6 style="font-size: 18px;">
+                                    <i class="fab fa-instagram"></i>
+                                    https://www.instagram.com
+                                </h6>
+                            </td>
+                            <td><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT76W5Cm7CAO6_wSXxRNZsMHY4i6vkDHAIhq1D_DYvmDAzUjmth2AdwS6-IkBzDJzLg4BY&usqp=CAU" alt="QR Code" width="30"></td>
+                            <td>4313</td>
+                            <td><span style="color: green; font-weight: bold;">Active <i class="fas fa-link"></i></span></td>
+                            <td>Feb 10 2021</td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+                
+               <div class="btn_lastrow">    
+                    <a href="./register.html" id="btn_toggle">Register Now</a><span id="btn_toggl" >to enjoy Unlimited History</span>
+               </div>
+
+            </div>
+        </section>
+
+    </main>
+    
+    <!-- jQuery and DataTables JS -->
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.js"></script>
+    <script src="../static/javascript/index.js"></script>
+
+</body>
+</html>

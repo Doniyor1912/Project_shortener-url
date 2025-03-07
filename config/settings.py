@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from django.utils.translation import gettext_lazy as _
 import environ
 import os
@@ -10,7 +12,6 @@ SECRET_KEY = env.str('SECRET_KEY')
 DEBUG = env.bool('DEBUG', default=False)
 ALLOWED_HOSTS = env.str('ALLOWED_HOSTS', default='').split(' ')
 BASE_DIR = root()
-
 
 # Application definition
 INSTALLED_APPS = [
@@ -58,6 +59,8 @@ CSRF_COOKIE_SECURE = False
 
 ROOT_URLCONF = 'config.urls'
 
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -78,8 +81,6 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -97,8 +98,6 @@ DATABASES = {
 
 
 # Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -122,8 +121,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
 ],
 
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',),
+    # 'DEFAULT_PERMISSION_CLASSES': (
+    #     'rest_framework.permissions.IsAuthenticated',),
 
     'DEFAULT_PARSER_CLASSES': [
         'rest_framework.parsers.JSONParser',
@@ -132,9 +131,12 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.FileUploadParser',
     ],
 
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_PAGINATION_CLASS': 'project.paginations.BasePagination',
+    'PAGE_SIZE': 10,
 }
 
+# Default primary key field type
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # Internationalization
@@ -164,8 +166,8 @@ MEDIA_TEST_ROOT = os.path.join(BASE_DIR, 'media/test/')
 
 
 
-# Default primary key field type
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
 
 
 

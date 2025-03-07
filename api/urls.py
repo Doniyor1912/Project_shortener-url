@@ -10,6 +10,6 @@ urlpatterns = [
 
 ]
 
-urlpatterns += doc_urls
+# urlpatterns += doc_urls
 urlpatterns += users_urls
 urlpatterns += project_urls

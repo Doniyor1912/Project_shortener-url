@@ -1,0 +1,365 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+
+.main {
+    /* background-image: url("../images/main_foto.png"); */
+    background-color:  #0D1117 !important;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 1600px;
+    height: 950px;
+    font-family: Arial, sans-serif;
+    }
+
+
+header {
+    padding: 15px ;
+    padding: 20px 40px; /* Yuqoridan-pastdan 20px, chap va o‘ngdan 40px */
+    background-color: #131722;
+
+}
+
+/* .navbar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 70%;
+}
+     */
+    
+    
+/* Linkly Logo */
+.main-logo{
+    width: 110;
+    height: 46;
+    font-family: Inter;
+    font-size: 26px;
+    font-weight: bold;
+    color: #741993;
+    
+}
+
+
+            /* Buttons*/
+    
+/* Login Button */
+.btn-login {
+    width: 104.1875px;
+    height: 48px;
+    border-radius: 19px;
+    border-width: 1px;
+    color: #ffffff;
+    border: 1px solid #3d3737;
+    box-shadow: 0px 8px 25px 0px #1b1b1b1a;
+    text-align: center;
+    text-decoration: none;
+    font-weight: 600;
+    background-color: #181E29;
+
+    padding: 10px 20px;
+    border-radius: 50px;
+    border: 1px solid #625f5f;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+
+}
+
+/* Login button Hover */
+.btn-login:hover {
+    background-color: #333;
+    color: #007bff;
+}
+
+
+
+/* Register Button */
+.btn-register {
+    width: 130.1875px;
+    height: 48px;
+    border-radius: 19px;
+    border-width: 1px;
+    color: #ffffff;
+    border: 1px solid #144EE3;
+    box-shadow: 10px 9px 22px 0px #144EE361;
+    text-decoration: none;
+    font-weight: 500;
+    background-color: #144EE3;
+
+    padding: 10px 5px; 
+    border-radius: 50px;
+    border: 1px solid #625f5f;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+    margin-left: 10px;
+}
+
+/* Register button Hover */
+.btn-register:hover{
+    background-color: #ffffff;
+    color: #007bff;
+}
+
+
+
+
+            /* Texts */
+
+/* Login Text */
+.login-text{
+    font-family: Inter;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 18px;
+    letter-spacing: 0%;
+    text-align: center;
+
+}
+
+/* Register Text */
+.register-text{
+    font-family: Inter;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 18px;
+    letter-spacing: 0%;
+    text-align: center;
+}
+
+
+
+
+            /* Icons*/
+
+/* Login icon */
+.login-icon {
+    margin-left: 7px;
+}
+
+/* R icon */
+.r-icon {
+    color: rgb(69, 67, 67);
+}
+    
+.container {
+    max-width: 1140px;
+    margin: auto;
+    padding-top: 20px;
+    /* overflow: visible !important; */
+}
+
+.text-center {
+    text-align: center; /* Center text horizontally */
+    width: 100%; /* Full width */
+    display: flex; 
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    font-size: 60px; /* Set font size */
+    font-weight: bold;
+    background: linear-gradient(90deg, #ff007f, #5a54ff);
+    -webkit-background-clip: text;
+    color: transparent;
+    margin: 25px auto auto auto; /* Top and bottom margin */
+    line-height: 1.3; /* Enough space for descenders */
+    padding: 10px 0; /* Extra padding for safety */
+    height: auto; /* Allow the element to expand */
+    min-height: 90px; /* Make sure it has enough height */
+    overflow: visible; /* Ensure text isn't clipped */
+}
+
+
+
+
+
+.center-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 30px;
+}
+.p-text{
+    width: 600px;
+    color: #C9CED6;
+}
+
+.input-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+/* Input container */
+.input-container {
+    display: flex;
+    align-items: center;
+    background: #131722;
+    padding: 8px 15px;
+    border-radius: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 600px;
+    line-height: 1.9;
+    box-shadow: 0 0 8px rgba(0, 102, 255, 0.5);
+
+}
+
+/* Icon inside the input */
+.icon {
+    color: #888;
+    margin-right: 10px;
+}
+
+/* Input field */
+.url-input {
+    flex: 1;
+    padding: 8px;
+    background: transparent;
+    border: none;
+    color: #C9CED6;
+    outline: none;
+}
+
+/* Shorten Button */
+.shorten-btn {
+    background: #0066ff;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 18px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+/* Button Hover Effect */
+.shorten-btn:hover {
+    background: #004bcc;
+}
+
+.center-container1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#shortenedLink{
+    width: 600px;
+    font-size: 14px;
+    color: #C9CED6;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-top: 60px;
+}
+.zero_five{
+    color: #ff007f;
+}
+
+/*      ---------------------------------------------------------------> */
+
+.table-responsive {
+    max-width: 1250px;
+    margin: auto;
+}
+
+
+
+
+#myTable {
+    table-layout: fixed; /* Forces fixed column widths */
+    width: 100%; /* Ensures table fits inside its container */
+}
+
+#myTable th, #myTable td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.fab.fa-youtube { color: red; font-size: 22px; margin-right: 4px;}
+.fab.fa-telegram { color: #0088cc; font-size: 22px; margin-right: 4px;}
+.fab.fa-linkedin { color: #0077b5; font-size: 22px; margin-right: 4px;}
+.fab.fa-github { color: black; font-size: 22px; margin-right: 4px;}
+.fab.fa-instagram { color: #E1306C; font-size: 22px; margin-right: 4px;}
+.fab.fa-twitter { color: #0077b5; font-size: 22px; margin-right: 4px;}
+
+/* --------------------------------------------------------last-bottom-button */
+
+.btn_lastrow{
+    width: 1300px !important;
+    background-color: #131722;
+    display: flex;
+    justify-content: center;
+}
+
+#btn_toggle {
+    color: rgb(71, 47, 177);
+    padding: 10px 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    align-items: center;
+    text-decoration: none;
+}
+#btn_toggl {
+    color: white;
+    padding: 10px 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    align-items: center;
+    text-decoration: none;
+}
+
+
+/* -------login-----style-------------- */
+
+.login-btn {
+    margin: 20px;
+}
+.login-modal {
+    width: 100%;
+    padding: 20px;
+
+}
+.form-group {
+    margin-bottom: 15px;
+}
+.form-label{
+    color: white;
+}
+.forgot-password {
+    float: right;
+    text-decoration: none;
+}
+.sign-up {
+    text-align: center;
+    text-decoration: none;
+    margin-top: 15px;
+    padding-bottom: 10px; /* Adjusted padding */
+}
+.jconfirm-box {
+    background: #0d0f1a !important;
+    overflow-x: hidden;
+    width: 600px !important;
+    border: #ffffff solid 2px;
+    border-radius: 5px;
+}
+.swal2-container {
+    z-index: 99999 !important;
+}
+
+
+
+

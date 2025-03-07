@@ -1,0 +1,49 @@
+body {
+      background-color: #f4f6f9;
+}
+.auth-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+.auth-card {
+    max-width: 420px;
+    width: 100%;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background: #fff;
+}
+.auth-logo img {
+    height: 30px;
+}
+.auth-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+}
+.auth-form .form-control {
+    border-radius: 6px;
+}
+.auth-form button {
+    border-radius: 6px;
+}
+.social-login a {
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 18px;
+    color: #fff;
+    margin: 5px;
+}
+.social-login .bg-facebook { background: #3b5998; }
+.social-login .bg-twitter { background: #1da1f2; }
+.social-login .bg-google { background: #db4437; }
+.footer-text {
+    font-size: 14px;
+    color: #666;
+}

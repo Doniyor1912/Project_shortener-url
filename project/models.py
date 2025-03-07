@@ -1,5 +1,7 @@
 import random
 import string
+
+from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 from config.settings import Length
@@ -12,7 +14,7 @@ class Shortened_db(models.Model):
     status = models.PositiveIntegerField(default=1)
     created_at = models.DateTimeField(default=timezone.now)
     last_accessed = models.DateTimeField(null=True, blank=True)
-
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
 
     def __str__(self):
         return f"{self.origin_url} -> {self.shorten_url}"

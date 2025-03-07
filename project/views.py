@@ -1,63 +1,79 @@
+from django.shortcuts import redirect
 from django.utils.timezone import now
-from rest_framework import generics, status, mixins, viewsets
-from rest_framework.response import Response
+from rest_framework import generics, status, serializers, mixins
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
 
 from .models import Shortened_db
-from .serializers import ShortenedURLSerializer
-from drf_spectacular.utils import extend_schema
-from django.shortcuts import get_object_or_404, redirect
-from django.http import HttpResponseRedirect
+from .paginations import BasePagination
+from .serializers import ShortenedURLSerializer, ShortUrlDetailSerializer
+from rest_framework.response import Response
 
 
-@extend_schema(summary='Create Url', tags=['Project'])
 class URLShortener(generics.CreateAPIView):
     queryset = Shortened_db.objects.all()
     serializer_class = ShortenedURLSerializer
 
-    def create(self, request, *args, **kwargs):
-        origin_url = request.data.get('origin_url')
-        if not origin_url:
-            return Response({"error": "origin_url is required"}, status=status.HTTP_400_BAD_REQUEST)
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
-        # Check if the URL already exists in the database
-        shortened = Shortened_db.objects.filter(origin_url=origin_url).first()
-        if shortened:
-            return Response(
-                {"message": "URL already shortened", "short_url": shortened.shorten_url},
-                status=status.HTTP_200_OK
-            )
-
-        # Create a new short URL
-        new_short_url = Shortened_db(origin_url=origin_url)
-        new_short_url.save()
-
-        return Response(
-            {"origin_url": origin_url, "short_url":new_short_url.shorten_url},
-            status=status.HTTP_201_CREATED
-        )
+    def validate_origin_url(self, value):
+        existing_entry = Shortened_db.objects.filter(origin_url=value).first()
+        if existing_entry:
+            raise serializers.ValidationError(f"This URL is already shortened: {existing_entry.shorten_url}")
+        return value
 
 
-
-
-@extend_schema(summary='Retrieve Url', tags=['Project'])
-class RedirectURLViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class RedirectShortURLView(generics.RetrieveAPIView):
     queryset = Shortened_db.objects.all()
-    serializer_class = ShortenedURLSerializer
-    lookup_field = "shorten_url"  # Lookupni 'shorten_url' bo‘yicha qilamiz
+    serializer_class = ShortUrlDetailSerializer
+    lookup_field = "shorten_url"
+    pagination_class = BasePagination
 
-    def retrieve(self, request, shorten_url=None):
-        short_url_obj = get_object_or_404(Shortened_db, shorten_url=shorten_url)
+    def retrieve(self, request, shorten_url):
+        try:
+            url_instance = Shortened_db.objects.get(shorten_url=shorten_url)
+        except Shortened_db.DoesNotExist:
+            return Response({"error": "Shortened URL not found."}, status=status.HTTP_404_NOT_FOUND)
 
-        # Check if URL is inactive
-        short_url_obj.check_status()
-        if not short_url_obj.status:
+        url_instance.check_status()
+        if not url_instance.status:
             return Response({"error": "This short URL is inactive."}, status=410)
 
-        # Update click count and last accessed time
-        short_url_obj.clicks += 1
-        short_url_obj.last_accessed = now()
-        short_url_obj.save()
 
-        # Redirect to the original URL
-        return redirect(short_url_obj.origin_url)  # `HttpResponseRedirect` o‘rniga
+        url_instance.clicks += 1
+        url_instance.last_accessed = now()
+        url_instance.save()
+        return redirect(url_instance.origin_url)
+
+
+
+class URLDetails(mixins.CreateModelMixin,
+                   mixins.RetrieveModelMixin,
+                   mixins.UpdateModelMixin,
+                   mixins.DestroyModelMixin,
+                   mixins.ListModelMixin,
+                   GenericViewSet):
+    serializer_class = ShortUrlDetailSerializer
+    pagination_class = BasePagination
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        return Shortened_db.objects.filter(user=self.request.user).order_by('-created_at')
+
+    def put(self, request, *args, **kwargs):
+        print("Received Data:", request.data)
+        return self.update(request, *args, partial=True)
+
+
+
+
+
+
+
+
+
+
+
+
+
