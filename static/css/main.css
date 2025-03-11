@@ -4,10 +4,12 @@
 }
 
 body {
-    background-image: url("../images/foto.png");
+    /* background-image: url("../images/main_foto.png"); */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-color: #131722;
     width: 1600px;
     color: white;
     font-family: 'Inter', sans-serif;
@@ -30,6 +32,7 @@ body {
 
  .logo {
     height: 46px;
+    /* margin-left: 40px; */
 } 
 /*------------------------INPUT---------------------  */
 .input-wrapper {
@@ -40,15 +43,15 @@ body {
     display: flex;
     align-items: center;
     background: #1C1F2E;
-    padding: 10px;
+    padding: 7px;
     border-radius: 25px;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    width: 700px;
+    width: 600px;
     box-shadow: 0 0 8px rgba(0, 102, 255, 0.5);
 }
 .url-input {
     flex: 1;
-    padding: 8px;
+    padding: 5px 5px 5px 10px;
     background: transparent;
     border: none;
     color: #C9CED6;
@@ -61,7 +64,9 @@ body {
     padding: 10px 16px;
     border-radius: 18px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 18px;
+    height: 55px;
+    width: 105px;
 }
 .shorten-btn:hover {
     background: #004bcc;
@@ -208,7 +213,7 @@ body {
 .nav-tabs {
     display: flex;
     justify-content: center;
-    background-color:#181E29;
+    background-color:#0d0f1a;
     padding: 15px 0;
     margin: 40px auto auto auto;
 }
@@ -256,31 +261,8 @@ body {
     width: 100%;
     height: 2px; /* Thickness of underline */
     background-color: white; /* Change to match your theme */
+    
 }
-
-
-/* Active tab styles */
-/* .tabs li.active {
-    color: #58a6ff; 
-} */
-
-/* .tabs li.active::after {
-    content: "";
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 100%;
-    height: 3px;
-    background-color: #58a6ff;
-    border-radius: 2px;
-} */
-
-/* Hover effect */
-/* .tabs li:hover {
-    color: #58a6ff;
-} */
-
-/* -----------------------------------TABLE ---------------------*/
 
 /* Table */
 
@@ -289,6 +271,7 @@ body {
     margin: 20px auto;
     padding: 20px;
     border-radius: 10px;
+    border: 2px solid #131722;
     display: flex;
     justify-content: center;
     /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
@@ -296,13 +279,15 @@ body {
 #userTable {
     width: 100%;
     table-layout: fixed;
-    
+    border: 1px solid #0d0f1a;
 }
 #userTable th, #userTable td{
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
+
 
 thead {
     background-color: #0f172a;
@@ -334,19 +319,35 @@ th, td {
 
 
 .copy-btn {
-    background-color: #292f35;
-
+    background-color: #444;
+    width: 30px;
+    height: 30px;
     color: white;
     border: none;
-    border-radius: 5px;
-    padding: 2px 5px;
+    border-radius: 90%;
+    margin-left: 3px;
+    padding: 2px 4px;
     cursor: pointer;
     transition: background-color 0.3s ease;
     flex-shrink: 0; 
 }
 
 .copy-btn:hover {
-    background-color: #444;
+    background-color: #2b2727;
 }
 
+/* actions buttons */
+
+.edit-link, .delete-link{
+    width: 40px !important;
+    height: 30px !important;
+}
+
+
+/* edit and cancel buttons */
+
+.save-link, .cancel-edit{
+    width: 37px;
+    height: 33px;
+}
 

@@ -1,7 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import login
-from .serializers import Registration, LoginSerializer
+from .serializers import RegistrationSerializer, LoginSerializer
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
@@ -9,15 +9,17 @@ from rest_framework.authentication import TokenAuthentication
 
 
 class RegisterView(generics.CreateAPIView):
-    serializer_class = Registration
+    serializer_class = RegistrationSerializer
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            self.perform_create(serializer)
-            headers = self.get_success_headers(serializer.data)
-            return Response({"message": "User registered successfully."}, status=status.HTTP_201_CREATED, headers=headers)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "User registered successfully."}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 
 
 

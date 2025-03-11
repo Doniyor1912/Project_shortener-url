@@ -1,35 +1,63 @@
-from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
+from rest_framework.exceptions import ValidationError
 
 
-class Registration(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
-    confirm_password = serializers.CharField(write_only=True, required=True)
+class RegistrationSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+    confirm_password = serializers.CharField(write_only=True)
+    username = serializers.CharField(write_only=True)
+    email = serializers.CharField(write_only=True)
+
     class Meta:
         model = User
         fields = ['username', 'email', 'password', 'confirm_password']
 
+    def validate(self, data):
+        # Validate username
+        username = data.get('username', '').strip()
+        if not username:
+            raise ValidationError({'username': 'Username cannot be empty!'})
 
-    def validate(self, attrs):
-        if attrs['password'] != attrs['confirm_password']:
-            raise serializers.ValidationError({"password": "Password fields didn't match."})
-        return attrs
+        if User.objects.filter(username=username).exists():
+            raise ValidationError({'username': 'Username already exists!'})
+
+        # Validate email
+        email = data.get('email', '').strip()
+        if not email:
+            raise ValidationError({'email': 'Email cannot be empty!'})
+
+        if '@' not in email:
+            raise ValidationError({'email': 'Invalid email address! Must contain "@" symbol.'})
+
+        if User.objects.filter(email=email).exists():
+            raise ValidationError({'email': 'Email already exists!'})
+
+        # Validate password
+        password = data.get('password', '')
+        confirm_password = data.get('confirm_password', '')
+
+        if not password:
+            raise ValidationError({'password': 'Password cannot be empty!'})
+
+        if len(password) <= 8:
+            raise ValidationError({'password': 'Password must be longer than 8 characters!'})
+
+        if password != confirm_password:
+            raise ValidationError({'confirm_password': "Passwords do not match!"})
+
+        return data
 
     def create(self, validated_data):
-        user = User.objects.create(
+        validated_data.pop('confirm_password')
+        user = User.objects.create_user(
             username=validated_data['username'],
             email=validated_data['email'],
-            # first_name=validated_data.get('first_name', ''),
-            # last_name=validated_data.get('last_name', '')
+            password=validated_data['password']
         )
-        user.set_password(validated_data['password'])
-        user.save()
         return user
-
-
 
 
 class LoginSerializer(serializers.Serializer):

@@ -4,6 +4,10 @@ $(document).ready(function () {
         window.location.href = "./register.html";
     }),
 
+    $('#share_lnk').on('click', function () {
+        $('.visible_link').slideToggle('fast'); // Add sliding animation
+    });
+
     // Login
     $("#login").click(function () {
         $.confirm({
@@ -58,6 +62,7 @@ $(document).ready(function () {
                 });
 
                 $('p').addClass('form-label')
+                $('.text-primary').css('text-decoration',"none")
             },
             buttons: {
                 login: {
@@ -103,16 +108,16 @@ $(document).ready(function () {
                                 });
 
                                 if (response.status === true || response.success) {
-                                    Swal.fire({
-                                        title: 'Success!',
-                                        text: 'Login successful',
-                                        icon: 'success',
-                                        didOpen: () => {
-                                            $(".swal2-container").css("z-index", "9999"); 
-                                        }
-                                    }).then(() => {
-                                        window.location.href = './main.html';
-                                    });
+                                    // Swal.fire({
+                                    //     title: 'Success!',
+                                    //     text: 'Login successful',
+                                    //     icon: 'success',
+                                    //     didOpen: () => {
+                                    //         $(".swal2-container").css("z-index", "9999"); 
+                                    //     }
+                                    // }).then(() => {
+                                    window.location.href = './main.html';
+                                    // });
                                 } else {
                                     Swal.fire({
                                         title: 'Error!',
@@ -167,122 +172,14 @@ $(document).ready(function () {
 
 $(document).ready(function () {
     let user = $('#myTable');
-    let lastRow = $(".blur-background").detach(); // Remove it before DataTables initializes
-
     let table = user.DataTable({
-        // scrollX: true,
-        // processing: true,
-        // serverSide: true,
-        // autoWidth: false,  
         pageLength: 5,
         lengthChange: false,
         ordering: false,
         searching: false,
         paging: false,
         info:false,
-        // ajax: {
-        //     url: 'http://127.0.0.1:8000/api/shorten/urls',
-        //     type: 'GET',
-        //     data: function (d) {  
-        //         d.page = Math.floor(d.start / d.length) + 1; // Calculate page correctly
-        //         d.page_size = d.length;  // Ensure Django receives correct page size
-        //     },
-
-        //     dataSrc: function (json) {
-        //         json.recordsTotal = json.count;  // Set total records
-        //         json.recordsFiltered = json.count;  // Set filtered records count
-        //         return json.results;  // Extract data array from Django's paginated response
-        //     }
-        // },
-        // columns: [
-        //     { data: 'id', title: 'ID', searchable: false, visible: false },
-        //     { data: 'shorten_url', title: 'Short Link'},
-        //     { data: 'origin_url', title: 'Original Link' },
-        //     {
-        //         data: null,
-        //         title: 'QR Code',
-        //         createdCell: function (td, cellData, rowData, row, col) {
-        //             // Create a unique ID for the QR code container and modal
-        //             let qrId = `qr-${rowData.id}`;
-        //             let modalId = `qr-modal-${rowData.id}`;
-
-        //             // Add QR code and modal structure (without close button)
-        //             $(td).html(`
-        //                 <div id="${qrId}" class="qr-container" style="cursor:pointer;"></div>
-                        
-        //                 <!-- Hidden Modal for Enlarged QR -->
-        //                 <div id="${modalId}" class="qr-modal" style="display:none; position:fixed; top:50%; left:50%;
-        //                     transform:translate(-50%, -50%); background:#fff; padding:10px; border-radius:8px; 
-        //                     box-shadow:0px 0px 10px rgba(0,0,0,0.2);">
-        //                     <div id="large-${qrId}"></div>
-        //                 </div>
-        //             `);
-
-        //             // Generate Small QR Code
-        //             if (rowData.id && rowData.shorten_url) {
-        //                 setTimeout(() => {
-        //                     new QRCode(document.getElementById(qrId), {
-        //                         text: rowData.shorten_url,
-        //                         width: 70,
-        //                         height: 60
-        //                     });
-        //                 }, 10);
-        //             } else {
-        //                 console.error("Error: Missing ID or Shortened URL", rowData);
-        //             }
-
-        //             // Add Click Event for Enlarging QR Code
-        //             $(td).find(`#${qrId}`).click(function (e) {
-        //                 let largeQRContainer = document.getElementById(`large-${qrId}`);
-        //                 largeQRContainer.innerHTML = ""; // Clear previous QR
-        //                 new QRCode(largeQRContainer, {
-        //                     text: rowData.shorten_url,
-        //                     width: 200,
-        //                     height: 200
-        //                 });
-
-        //                 // Show Modal
-        //                 $(`#${modalId}`).fadeIn();
-
-        //                 // Stop event from bubbling up (prevents immediate closing)
-        //                 e.stopPropagation();
-        //             });
-
-        //             // Close Modal on Clicking Outside the QR Code
-        //             $(document).on("click", function (e) {
-        //                 // Check if clicked area is NOT inside the modal or small QR code
-        //                 if (!$(e.target).closest(`.qr-modal, #${qrId}`).length) {
-        //                     $(`#${modalId}`).fadeOut();
-        //                 }
-        //             });
-
-
-
-
-
-
-        //         }
-        //     },
-
-
-        //     { data: 'clicks', title: 'Clicks' },
-        //     {   data: 'status', 
-        //         title: 'Status',
-
-        //     },
-        //     { 
-        //         data: 'created_at', 
-        //         title: 'Date', 
-        //         render: function (data, type, row) {
-        //             if (!data) return '';  
-        //             var date = new Date(data);  
-        //             var options = { month: 'short', day: '2-digit', year: 'numeric' };
-        //             return date.toLocaleDateString('en-US', options).replace(',', '');
-        //         }
-        //     }
-        // ],
         columnDefs: [
-            // { targets: 0, width: "5%" },
             { targets: 0, width: "20%" },
             { targets: 1, width: "20%" },
             { targets: 2, width: "15%" },
@@ -291,53 +188,148 @@ $(document).ready(function () {
             { targets: 5, width: "10%" }
         ],
 
-        rowCallback: function (row, data, index) {
-            // Prevent DataTables from processing the last row
-            if ($(row).hasClass("blur-background")) {
-                $(row).removeAttr("role"); // Remove accessibility attributes that affect sorting
-            }
-        },
-        createdRow: function (row, data, dataIndex) {
-            if ($(row).hasClass("blur-background")) {
-                $(row).addClass("no-sort");
-            }
-        }
-
         });
 
 
 
-
-
-
+        $(document).ready(function () {
+            // Hide the container by default
+            $('.container_short').hide();
         
-      // Input_url
-        $("#submit_btn").click(function () {
-        let originalUrl = $("#input_url").val().trim(); 
+            $('#submit_btn').on('click', function () {
+                const originUrl = $('#input_url').val();
+        
+                $.ajax({
+                    url: 'http://127.0.0.1:8000/api/2/shorten-url/',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ origin_url: originUrl }),
+                    success: function (response) {
+                        // Update the short link text
+                        $('#short_lnk').text(response.short_url);
+                        // $('#short_lnk').attr('href', response.short_url);
 
-        if (originalUrl === "") {
-            Swal.fire("Error", "Please enter a URL!", "error");
-            return;
-        }
-
-        $.ajax({
-            url: "http://127.0.0.1:8000/api/shorten/", 
-            type: "POST",
-            contentType: "application/json",
-            data: JSON.stringify({ origin_url: originalUrl }),
-            success: function (response) {
-                Swal.fire("Success", "URL successfully shortened!", "success");
-
-                $("#input_url").val("");
-
-                table.ajax.reload();
-            },
-            error: function (xhr) {
-                Swal.fire("Error", "Failed to shorten URL: " + xhr.responseText, "error");
+                        $("#input_url").val("");
+        
+                        // Show the container with the short URL
+                        $('.container_short').show();
+        
+                        // Optionally, scroll to the container for better UX
+                        $('html, body').animate({
+                            scrollTop: $('.container_short').offset().top
+                        }, 500);
+                    },
+                    error: function () {
+                        
+                    }
+                });
+            });
+        });
+    })
+        //##########################--------COPY-BUTTON-----------################################### 
+        $(document).ready(function() {
+            // Handle Copy Button Click
+            $('.copy_link_short').click(function() {
+                const text = $('#short_lnk').text(); // Get the text from the target element
+        
+                // Copy to Clipboard
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast("Copied to clipboard: " + text); 
+                }).catch(err => {
+                    console.error('Failed to copy text: ', err);
+                    showToast("Failed to copy!"); 
+                });
+            });
+        
+            // Function to show a toast notification
+            function showToast(message) {
+                const toast = document.createElement("div");
+                toast.textContent = message;
+                toast.style.position = "fixed";
+                toast.style.bottom = "20px";
+                toast.style.right = "20px";
+                toast.style.backgroundColor = "#333";
+                toast.style.color = "#fff";
+                toast.style.padding = "10px 20px";
+                toast.style.borderRadius = "5px";
+                toast.style.zIndex = "1000";
+                toast.style.opacity = "0";
+                toast.style.transition = "opacity 0.5s";
+        
+                document.body.appendChild(toast);
+        
+                // Fade in the toast
+                setTimeout(() => {
+                    toast.style.opacity = "1";
+                }, 10);
+        
+                // Fade out and remove the toast after 3 seconds
+                setTimeout(() => {
+                    toast.style.opacity = "0";
+                    setTimeout(() => {
+                        document.body.removeChild(toast);
+                    }, 500); 
+                }, 3000);
             }
         });
-    });
+        
 
-})
+
+
+
+
+
+
+
+//         $(document).ready(function () {
+//             $('#shortenButton').on('click', function () {
+//                 const originUrl = $('#originUrlInput').val();
+        
+//                 $.ajax({
+//                     url: 'http://127.0.0.1:8000/api/shorten-url/',
+//                     type: 'POST',
+//                     contentType: 'application/json',
+//                     data: JSON.stringify({ origin_url: originUrl }),
+//                     success: function (response) {
+//                         $('#shortUrlDisplay').html(`
+//                             <a href="${response.short_url}" target="_blank">${response.short_url}</a>
+//                         `);
+//                     },
+//                     error: function () {
+//                         alert('Failed to shorten URL');
+//                     }
+//                 });
+//             });
+//         });
+        
+        
+//       // Input_url
+//         $("#submit_btn").click(function () {
+//         let originalUrl = $("#input_url").val().trim(); 
+
+//         if (originalUrl === "") {
+//             Swal.fire("Error", "Please enter a URL!", "error");
+//             return;
+//         };
+
+//         $.ajax({
+//             url: "http://127.0.0.1:8000/api/shorten-url/", 
+//             type: "POST",
+//             contentType: "application/json",
+//             data: JSON.stringify({ origin_url: originalUrl }),
+//             success: function (response) {
+//                 Swal.fire("Success", "URL successfully shortened!", "success");
+
+//                 $("#input_url").val("");
+
+//                 table.ajax.reload();
+//             },
+//             error: function (xhr) {
+//                 Swal.fire("Error", "Failed to shorten URL: " + xhr.responseText, "error");
+//             }
+//         });
+//     });
+
+
 
 

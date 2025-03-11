@@ -1,6 +1,8 @@
 from django.shortcuts import redirect
 from django.utils.timezone import now
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, status, serializers, mixins
+from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
 
@@ -57,6 +59,8 @@ class URLDetails(mixins.CreateModelMixin,
     serializer_class = ShortUrlDetailSerializer
     pagination_class = BasePagination
     permission_classes = (IsAuthenticated,)
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    search_fields = ['original_url', 'short_code']
 
     def get_queryset(self):
         return Shortened_db.objects.filter(user=self.request.user).order_by('-created_at')

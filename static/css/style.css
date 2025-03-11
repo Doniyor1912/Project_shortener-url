@@ -10,25 +10,30 @@
     background-position: center;
     background-repeat: no-repeat;
     width: 1600px;
-    height: 950px;
+    max-height: 100%;
+    /* height: 950px; */
     font-family: Arial, sans-serif;
     }
 
 
-header {
-    padding: 15px ;
-    padding: 20px 40px; /* Yuqoridan-pastdan 20px, chap va o‘ngdan 40px */
-    background-color: #131722;
-
+/* Header Styles */
+.header {
+    background-color: #131722; /* Dark background */
+    padding: 20px 40px; /* Add padding */
+    display: flex; /* Make header a flex container */
+    justify-content: center; /* Space between logo and buttons */
+    align-items: center; /* Center items vertically */
+    width: 100%;
 }
 
-/* .navbar{
+/* Navbar Styles */
+.navbar {
+    width: 80%; /* Full width */
+    max-width: 1200px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 70%;
+    justify-content: space-between; /* Space between logo and buttons */
+    align-items: center; /* Center items vertically */
 }
-     */
     
     
 /* Linkly Logo */
@@ -201,15 +206,28 @@ header {
 .input-container {
     display: flex;
     align-items: center;
-    background: #131722;
-    padding: 8px 15px;
-    border-radius: 25px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background:  #0D1117 inset;
+    padding: 6px 6px 6px 15px;
+    border-radius: 40px;
+    border: 1px solid white;
     width: 600px;
+    height: 65px;
     line-height: 1.9;
     box-shadow: 0 0 8px rgba(0, 102, 255, 0.5);
 
 }
+
+input[type="text"]:-webkit-autofill,
+input[type="url"]:-webkit-autofill {
+    background-color: #0D1117 !important; /* Match your dark theme */
+    color: #fff !important;
+    /* box-shadow: 0 0 0px 1000px #444 inset !important; */
+    -webkit-text-fill-color: #fff !important;
+    border: 1px solid #333;
+    border: none;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
 
 /* Icon inside the input */
 .icon {
@@ -233,10 +251,12 @@ header {
     color: white;
     border: none;
     padding: 8px 12px;
-    border-radius: 18px;
+    border-radius: 30px;
     cursor: pointer;
     font-weight: bold;
-    font-size: 16px;
+    font-size: 17px;
+    height: 50px;
+    width: 120px;
 }
 
 /* Button Hover Effect */
@@ -272,9 +292,9 @@ header {
     max-width: 1250px;
     margin: auto;
 }
-
-
-
+.container{
+    border: 2px solid rgba(30, 103, 230, .2);
+}
 
 #myTable {
     table-layout: fixed; /* Forces fixed column widths */
@@ -285,6 +305,9 @@ header {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    background-color: #0D1117;
+    color: whitesmoke;
+
 }
 
 .fab.fa-youtube { color: red; font-size: 22px; margin-right: 4px;}
@@ -362,4 +385,108 @@ header {
 
 
 
+/* share icons */
 
+.container_short {
+max-width: 600px;
+margin: 50px auto;
+padding: 20px;
+border: 2px solid white;
+border-radius: 15px;
+background-color:  #0D1117;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+display: none;
+}
+.short_text {
+color: #9c6bfa;
+text-align: center;
+margin-bottom: 18px;
+}
+
+.share_link_short{
+margin-right: 5px;
+background:  #0D1117 !important;
+border: none !important;
+}
+
+.copy_link_short{
+background:  #0D1117 !important;
+border: none !important;
+}
+
+.short-url-box {
+display: flex;
+justify-content: space-between;
+align-items: center;
+background-color:  #0D1117;
+padding: 10px;
+border:  1px solid white;
+border-radius: 10px;
+margin-bottom: 20px;
+}
+.short_link1 {
+border: none;
+background-color:  #0D1117;
+color: white;
+width: 100%;
+outline: none;
+margin-right: 10px;
+align-items: center;
+margin-top: 10px;
+
+}
+
+.visible_link{
+    display: none;
+}
+
+
+.share-buttons {
+display: flex;
+justify-content: center;
+gap: 15px;
+padding: 10px;
+margin-bottom: 10px;
+border: 1px solid white;
+border-radius: 10px;
+height: 70px;
+padding: 12px;
+}
+
+/* Ensure uniform icon size and proper centering */
+.share-buttons a {
+display: inline-flex; /* Use inline-flex for proper spacing */
+align-items: center;
+justify-content: center;
+width: 40px;
+height: 40px;
+border-radius: 10px;
+font-size: 24px;
+color: #fff;
+transition: all 0.3s;
+text-decoration: none; /* Avoid underline on links */
+}
+
+.share-telegram {
+background-color: #0088cc;
+}
+
+.share-facebook {
+background-color: #3b5998;
+}
+
+.share-instagram {
+background: linear-gradient(45deg, #f58529, #dd2a7b, #8134af, #515bd4);
+}
+
+/* Hover effect */
+.share-buttons a:hover {
+transform: scale(1.1);
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.text-center_short {
+font-size: 12px;
+color: beige;
+text-align: center;
+}

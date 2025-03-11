@@ -9,14 +9,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-
-    <style>
-
-
-    </style>
 
 
 </head>
@@ -45,18 +41,48 @@
     <!--------------------------------------------------------------------------------------------------------------->
     
         <section>
-            <div class="container">
+            <div class="containerbody">
                 <h1 class="text-center">Shorten Your Loooong Links :)</h1>
                 <div class="center-container">
                     <p class="p-text">Linkly is an efficient and easy-to-use URL shortening service that streamlines your online experience</p>
                 </div>
-                <div class="input-wrapper">
-                    <div class="input-container">
-                        <span class="icon">🔗</span>
-                        <input type="text" class="url-input" id="input_url" placeholder="Enter the link here">
-                        <button class="shorten-btn" id="submit_btn" >Shorten Now !</button>
+                <main class="main2">
+                    <div class="input-wrapper">
+                        <div class="input-container">
+                            <span class="icon">🔗</span>
+                            <input type="text" class="url-input" id="input_url" placeholder="Enter the link here">
+                            <button class="shorten-btn" id="submit_btn" >Shorten!</button>
+                        </div>
                     </div>
-                </div>
+
+                    <div class="container_short">
+                        <h2 class="short_text">Your short URL is ready!</h2>
+                        <div class="short-url-box">
+                           <h6 class="short_link1" id="short_lnk"></h6>
+                            <button class="btn btn-primary share_link_short" id="share_lnk">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <button class="btn btn-secondary copy_link_short" data-target="#short_lnk1">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <div class="visible_link">
+                            <div class="share-buttons">
+                                <a href="#" class="share-telegram" target="_blank">
+                                    <i class="fab fa-telegram-plane"></i>
+                                </a>
+                                <a href="#" class="share-facebook" target="_blank">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="#" class="share-instagram" target="_blank">
+                                    <i class="fa-brands fa-instagram"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <p class="text-center_short">Click the link to open or use the buttons to share easily!</p>
+                    </div>
+
+                </main>
                 <div class="center-container1">
                     <p id="shortenedLink">You can create <span class="zero_five">05</span> more links. Register Now to enjoy Unlimited usage </p>
                 </div>
@@ -65,7 +91,7 @@
     <!------------------------------------------------------------------------------------------------------------------>
         <section>
             <div class="container ">
-                <table id="myTable" class="table table-dark  table-striped hover">
+                <table id="myTable" class="table hover" style="color: #0D1117;">
                     <thead>
                         <tr>
                             <th>Short Link</th>
@@ -81,7 +107,7 @@
                         <tr>
                             <td>
                                 <span id="shortLink" style="font-size: 17px;">https://linkly.com/zT09B0</span>
-                                <button style="border-radius: 5px;" onclick="copyToClipboard('shortLink')" class="btn btn-sm btn-outline-light">
+                                <button style="border-radius: 5px;" onclick="copyToClipboard()" class="btn btn-sm btn-outline-light">
                                     <i class="fas fa-copy"></i>
                                 </button>
                             </td>

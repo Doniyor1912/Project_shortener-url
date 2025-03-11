@@ -90,7 +90,7 @@
             <div class="input-wrapper">
                 <div class="input-container">
                     <input type="text" class="url-input" id="url_input" placeholder="Enter the link here">
-                    <button class="shorten-btn"id="btn_submit">Shorten Now</button>
+                    <button class="shorten-btn"id="btn_submit">Shorten</button>
                 </div>
             </div>
             <div class="dropdown">
@@ -126,8 +126,7 @@
             <div class="table-header d-flex justify-content-between align-items-center mb-3">
                 <h3 id="count_link"></h3>
                 <div class="table-actions">
-                    <button class="btn btn-secondary bulk-edit">Bulk Edit</button>
-                    <button class="btn btn-secondary filter">Filter</button>
+                    <button id="filterBtn" class="btn btn-secondary filter">Filter</button>
                 </div>
             </div>
 
@@ -173,6 +172,308 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script type="module" src="../static/javascript/main.js"></script>
+
+    <script>
+
+
+$(document).ready(function () {
+    $("#filterBtn").click(function () {
+        let searchQuery = $("#searchInput").val();
+        let statusFilter = $("#statusFilter").val();
+        let token = localStorage.getItem("token");
+
+        $.ajax({
+            url: "http://127.0.0.1:8000/api/shorten/get-all/",  // Update with your API endpoint
+            type: "GET",
+            data: {
+                search: searchQuery,
+                status: statusFilter
+            },
+            contentType: "application/json",  // Optional for GET
+            headers: { "Authorization": "Token " + token },
+            success: function (response) {
+                console.log("Filtered Data:", response);
+                updateTable(response.results);
+            },
+            error: function (xhr) {
+                console.error("Error fetching filtered data", xhr);
+            }
+        });
+    });
+});
+
+// Function to update table dynamically
+function updateTable(data) {
+    let tableBody = $("#urlTable tbody");
+    tableBody.empty();  // Clear existing rows
+
+    if (data.length === 0) {
+        tableBody.append(`<tr><td colspan="4" class="text-center">No matching results found.</td></tr>`);
+        return;
+    }
+
+    data.forEach(item => {
+        let row = `<tr>
+            <td>${item.original_url}</td>
+            <td><a href="${item.short_code}" target="_blank">${item.short_code}</a></td>
+            <td>${item.status === "active" ? "<span class='badge badge-success'>Active</span>" : "<span class='badge badge-danger'>Inactive</span>"}</td>
+            <td>${new Date(item.created_at).toLocaleString()}</td>
+        </tr>`;
+        tableBody.append(row);
+    });
+}
+
+
+
+
+// Swal.fire({
+//     title: "Filter Data",
+//     html: `...`,
+//     showCancelButton: true,
+//     confirmButtonText: "Apply Filters",
+//     cancelButtonText: "Reset",
+//     preConfirm: () => {
+//         applyFilters();
+//     }
+// }).then((result) => {
+//     if (result.dismiss === Swal.DismissReason.cancel) {
+//         $("#userTable tbody tr").show();  // Show all rows again
+//     }
+// });
+
+
+
+
+
+
+
+
+// $(document).ready(function() {
+//     $('#filterBtn').click(function() {
+//         $.confirm({
+//             title: 'Filter Data',
+//             content: '' +
+//                 '<form action="" class="formName">' +
+//                 '<div class="form-group">' +
+//                 '<label>Enter filter text</label>' +
+//                 '<input type="text" placeholder="Search..." class="filter-input form-control" required />' +
+//                 '</div>' +
+//                 '</form>',
+//             buttons: {
+//                 filter: {
+//                     text: 'Filter',
+//                     btnClass: 'btn-blue',
+//                     action: function () {
+//                         var filterText = this.$content.find('.filter-input').val().toLowerCase().trim();
+//                         if(!filterText){
+//                             $.alert('Please enter a filter text.');
+                        //     return false;
+                        // }
+
+                        // Filter table rows based on input
+//                         $('#userTable tbody tr').each(function() {
+//                             var rowText = $(this).text().toLowerCase();
+//                             if (rowText.includes(filterText)) {
+//                                 $(this).show();
+//                             } else {
+//                                 $(this).hide();
+//                             }
+//                         });
+//                     }
+//                 },
+//                 cancel: function () {
+//                     // Do nothing on cancel
+//                 }
+//             }
+//         });
+//     });
+
+//     // Reset Button to Show All Rows
+//     $('#resetBtn').click(function() {
+//         $('#userTable tbody tr').show();
+//     });
+// });
+
+
+
+
+
+
+
+
+// $(document).ready(function () {
+//     $("#filterBtn").click(function () {
+//         Swal.fire({
+//             title: "Filter Data",
+//             html: `
+//                 <input type="text" id="search-url" class="swal2-input" placeholder="Search Short or Original URL">
+
+//                 <input type="date" id="filter-date-from" class="swal2-input">
+                
+//                 <select id="filter-status" class="swal2-input">
+//                     <option value="">All Status</option>
+//                     <option value="true">Active</option>
+//                     <option value="false">Inactive</option>
+//                 </select>
+            
+//             `,
+//             background: "#444",
+//             color: '#fff',
+//             showCancelButton: true,
+//             confirmButtonText: "Apply Filters",
+//             cancelButtonText: "Reset",
+//             preConfirm: () => {
+//                 applyFilters();  // Call filter function
+//             }
+//         });
+//     });
+// });
+
+
+
+
+// function applyFilters() {
+//     let searchText = $("#search-url").val().toLowerCase();  // Get input value
+//     let selectedStatus = $("#filter-status").val();  // Get status dropdown value
+//     let fromDate = $("#filter-date-from").val();  // Get start date
+
+//     $("#userTable tbody tr").each(function () {
+//         let shortLink = $(this).find("td:nth-child(1) a").text().toLowerCase();
+//         let originalLink = $(this).find("td:nth-child(2) a").text().toLowerCase();
+//         let statusText = $(this).find("td:nth-child(5)").text().trim().toLowerCase();
+//         let rowDateText = $(this).find("td:nth-child(6)").text().trim();
+//         let rowDate = rowDateText ? parseDate(rowDateText) : null; // Parse date correctly
+
+//         // ✅ Status filtering
+//         let statusMatch = true;
+//         if (selectedStatus) {
+//             let expectedStatus = selectedStatus === "true" ? "active" : "inactive";
+//             statusMatch = statusText.toLowerCase() === expectedStatus;
+//         }
+
+//         // ✅ Text filtering (Short Link or Original Link)
+//         let textMatch = searchText ? (shortLink.includes(searchText) || originalLink.includes(searchText)) : false;
+
+//         // ✅ Date filtering
+//         let dateMatch = true;
+//         if (fromDate) {
+//             let filterDate = new Date(fromDate);
+//             dateMatch = rowDate ? rowDate >= filterDate : false;
+//         }
+
+//         // ✅ Final filtering logic
+//         if (statusMatch || dateMatch || textMatch) {
+//             $(this).show();
+//         } else {
+//             $(this).hide();
+//         }
+//     });
+
+//     Swal.fire("✅ Filters Applied!", "Filtered results are now displayed.", "success");
+// }
+
+
+
+// $(document).ready(function () {
+//     $("#filterBtn").click(function () {
+//         Swal.fire({
+//             title: "Filter Data",
+//             html: `
+//                 <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+//                     <input type="text" id="search-url" class="swal2-input" placeholder="Search Short or Original URL">
+                    
+//                     <input type="date" id="filter-date-from" class="swal2-input">
+                    
+//                     <select id="filter-status" class="swal2-input">
+//                         <option value="">All Status</option>
+//                         <option value="true">Active</option>
+//                         <option value="false">Inactive</option>
+//                     </select>
+
+//                     <div style="display: flex; justify-content: center; gap: 10px; width: 100%;">
+//                         <button id="filter-apply" class="swal2-confirm swal2-styled" style="background: green;">Apply Filters</button>
+//                         <button id="filter-reset" class="swal2-cancel swal2-styled" style="background: red;">Reset</button>
+//                     </div>
+//                 </div>
+//             `,
+//             background: "#444",
+//             color: "#fff",
+//             showConfirmButton: false,
+//             showCancelButton: false,
+//             didOpen: () => {
+//                 document.getElementById("filter-apply").addEventListener("click", () => {
+//                     applyFilters();
+//                     Swal.close();
+//                 });
+
+//                 document.getElementById("filter-reset").addEventListener("click", () => {
+//                     $("#search-url").val("");
+//                     $("#filter-status").val("");
+//                     $("#filter-date-from").val("");
+//                     $("#userTable tbody tr").show(); // Show all rows again
+//                 });
+//             }
+//         });
+//     });
+// });
+
+// function applyFilters() {
+//     let searchText = $("#search-url").val().toLowerCase();
+//     let selectedStatus = $("#filter-status").val();
+//     let fromDate = $("#filter-date-from").val();
+
+//     console.log("225-page Filtering started", searchText, selectedStatus, fromDate);
+
+//     $("#userTable tbody tr").each(function () {
+//         let shortLink = $(this).find("td:nth-child(1) a").text().toLowerCase();
+//         let originalLink = $(this).find("td:nth-child(2) a").text().toLowerCase();
+//         let statusText = $(this).find("td:nth-child(5)").text().trim().toLowerCase();
+//         let rowDateText = $(this).find("td:nth-child(6)").text().trim();
+//         let rowDate = rowDateText ? parseDate(rowDateText) : null;
+
+//         let statusMatch = selectedStatus ? (statusText === (selectedStatus === "true" ? "active" : "inactive")) : true;
+//         let textMatch = searchText ? (shortLink.includes(searchText) || originalLink.includes(searchText)) : true;
+//         let dateMatch = true;
+        
+//         if (fromDate) {
+//             let filterDate = new Date(fromDate);
+//             dateMatch = rowDate ? rowDate >= filterDate : false;
+//         }
+
+//         // ✅ If at least one filter is applied, and it matches, show the row
+//         if ((searchText && textMatch) || (selectedStatus && statusMatch) || (fromDate && dateMatch)) {
+//             $(this).show();
+//         } else {
+//             $(this).hide();
+//         }
+//     });
+
+//     Swal.fire("✅ Filters Applied!", "Filtered results are now displayed.", "success");
+// }
+
+// // ✅ Convert Date String to JavaScript Date
+// function parseDate(dateStr) {
+//     let parts = dateStr.split(" ");
+//     if (parts.length === 3) {
+//         let day = parseInt(parts[1]);
+//         let month = getMonthNumber(parts[0]);
+//         let year = parseInt(parts[2], 10);
+//         return new Date(year, month - 1, day);
+//     }
+//     return new Date(dateStr);
+// }
+
+// // ✅ Convert Month Name to Number
+// function getMonthNumber(monthName) {
+//     const months = {
+//         "January": 1, "February": 2, "March": 3, "April": 4, "May": 5, "June": 6,
+//         "July": 7, "August": 8, "September": 9, "October": 10, "November": 11, "December": 12
+//     };
+//     return months[monthName] ?? -1;
+// }
+
+
+    </script>
 
 </body>
 </html>
