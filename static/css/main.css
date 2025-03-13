@@ -351,3 +351,59 @@ th, td {
     height: 33px;
 }
 
+/* action inside save and cancel buttons */
+
+.delete-link {
+
+    /* padding: 2px 6px; */
+    font-size: 10px;
+    min-width: 30px;
+    height: 24px;
+    /* line-height: 1; */
+}
+
+.edit-link {
+    font-size: 10px;
+    min-width: 40px;
+    height: 24px;
+    margin-right: 3px;
+    text-align: center;
+}
+
+
+
+
+        /* Custom SweetAlert2 Popup */
+.custom-swal-popup {
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    font-family: 'Arial', sans-serif;
+}
+
+/* Custom Confirm Button */
+.custom-swal-confirm-btn {
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 14px;
+    color: white;
+}
+
+.custom-swal-confirm-btn:hover {
+    background-color: #45a049;
+}
+
+/* Custom Cancel Button */
+.custom-swal-cancel-btn {
+    background-color: #f44336;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 14px;
+    color: white;
+}
+
+.custom-swal-cancel-btn:hover {
+    background-color: #4d4343;
+}

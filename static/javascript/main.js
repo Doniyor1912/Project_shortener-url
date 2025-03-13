@@ -55,7 +55,13 @@ $(document).ready(function () {
             headers: {
                 "Authorization": "Token " + token
             },
+
             data: function (d) {  
+                d.search_short = $('#searchInput_short').val();
+                d.search_origin = $('#searchInput_origin').val();
+                d.created_at = $('#dateFilter').val();
+                d.status = $('#statusFilter').val();
+
                 d.page = Math.floor(d.start / d.length) + 1; // Calculate page correctly
                 d.page_size = d.length;  // Ensure Django receives correct page size
             },
@@ -221,6 +227,57 @@ $(document).ready(function () {
             let totalRecords = settings.json.recordsTotal;  
             $('#count_link').text('History ' + '('+ totalRecords +')'); 
         },
+    });
+
+
+
+
+    $("#filterBtn").click(function () {
+        $.confirm({
+            title: 'Filter Data',
+            content: `
+                <div>
+                    <label for="searchInput_short">Search by Short Link:</label>
+                    <input type="text" id="searchInput_short" class="form-control" placeholder="Enter your Short Link">
+                </div>
+
+                <div>
+                    <label for="searchInput_origin">Search by Origin Link:</label>
+                    <input type="text" id="searchInput_origin" class="form-control" placeholder="Enter your Origin Link">
+                </div>
+
+
+                <div>
+                    <label>Date:</label>
+                    <input type="date" id="dateFilter" class="form-control">
+                </div>
+                
+                <div>
+                    <label>Status:</label>
+                    <select id="statusFilter" class="form-control">
+                        <option value="">All</option>
+                        <option value="1">Active</option>
+                        <option value="0">Inactive</option>
+                    </select>
+                </div>
+            `,
+            buttons: {
+                filter: {
+                    text: 'Apply Filter',
+                    btnClass: 'btn-blue',
+                    action: function () {
+                        let user = $('#userTable').DataTable();
+                        user.ajax.reload();
+                    }
+                },
+                cancel: {
+                    text: 'Cancel',
+                    action: function () {
+                        // Just close the popup
+                    }
+                }
+            }
+        });
     });
 
 
@@ -401,33 +458,33 @@ $(document).ready(function () {
                 
             //###########################-----Input_url-------###################################
         $("#btn_submit").click(function () {
-        let originalUrl = $("#url_input").val().trim(); 
+            let originalUrl = $("#url_input").val().trim(); 
 
-        if (originalUrl === "") {
-            Swal.fire("Error", "Please enter a URL!", "error");
-            return;
-        }
-
-        $.ajax({
-            url: "http://127.0.0.1:8000/api/shorten/", 
-            type: "POST",
-            headers: {
-                "Authorization": "Token " + token
-            },
-            contentType: "application/json",
-            data: JSON.stringify({ origin_url: originalUrl }),
-            success: function (response) {
-                // Swal.fire("Success", "URL successfully shortened!", "success");
-
-                $("#url_input").val("");
-
-                table.ajax.reload();
-            },
-            error: function (xhr) {
-                Swal.fire("Error", "Failed to shorten URL: " + xhr.responseText, "error");
+            if (originalUrl === "") {
+                Swal.fire("Error", "Please enter a URL!", "error");
+                return;
             }
-        });
-    })
+
+            $.ajax({
+                url: "http://127.0.0.1:8000/api/shorten/", 
+                type: "POST",
+                headers: {
+                    "Authorization": "Token " + token
+                },
+                contentType: "application/json",
+                data: JSON.stringify({ origin_url: originalUrl }),
+                success: function (response) {
+                    // Swal.fire("Success", "URL successfully shortened!", "success");
+
+                    $("#url_input").val("");
+
+                    table.ajax.reload();
+                },
+                error: function (xhr) {
+                    Swal.fire("Error", "Failed to shorten URL: " + xhr.responseText, "error");
+                }
+            });
+        })
 
 
 

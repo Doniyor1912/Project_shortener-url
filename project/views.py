@@ -1,7 +1,8 @@
+from django.db.models.functions import TruncDate
 from django.shortcuts import redirect
 from django.utils.timezone import now
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import generics, status, serializers, mixins
+from rest_framework import generics, status, serializers, mixins, viewsets
 from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
@@ -49,35 +50,35 @@ class RedirectShortURLView(generics.RetrieveAPIView):
         return redirect(url_instance.origin_url)
 
 
-
-class URLDetails(mixins.CreateModelMixin,
-                   mixins.RetrieveModelMixin,
-                   mixins.UpdateModelMixin,
-                   mixins.DestroyModelMixin,
-                   mixins.ListModelMixin,
-                   GenericViewSet):
+class URLDetails(viewsets.ModelViewSet):
     serializer_class = ShortUrlDetailSerializer
-    pagination_class = BasePagination
-    permission_classes = (IsAuthenticated,)
-    filter_backends = [DjangoFilterBackend, SearchFilter]
-    search_fields = ['original_url', 'short_code']
+    permission_classes = [IsAuthenticated]
+
 
     def get_queryset(self):
-        return Shortened_db.objects.filter(user=self.request.user).order_by('-created_at')
+        queryset = Shortened_db.objects.filter(user=self.request.user).order_by('-created_at')
+
+        status = self.request.query_params.get('status')
+        created_at = self.request.query_params.get('created_at')
+        search_short = self.request.query_params.get('search_short')
+        search_origin = self.request.query_params.get('search_origin')
+
+        if status:
+            queryset = queryset.filter(status=status)
+
+        if created_at:
+            queryset = queryset.annotate(created_date=TruncDate('created_at')).filter(created_date=created_at)
+
+        if search_short:
+            queryset = queryset.filter(shorten_url=search_short)
+
+        if search_origin:
+            queryset = queryset.filter(origin_url=search_origin)
+
+        return queryset
+
 
     def put(self, request, *args, **kwargs):
         print("Received Data:", request.data)
         return self.update(request, *args, partial=True)
-
-
-
-
-
-
-
-
-
-
-
-
 

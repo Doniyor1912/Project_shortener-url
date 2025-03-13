@@ -15,6 +15,8 @@ class ShortenedURLSerializer(serializers.ModelSerializer):
 class ShortUrlDetailSerializer(serializers.ModelSerializer):
     shorten_url = serializers.SerializerMethodField()
     status = serializers.IntegerField(required=True)
+    created_at = serializers.SerializerMethodField()  # ✅ Custom field for date formatting
+
 
     Domain = env.str('DOMAIN',"")
 
@@ -30,6 +32,10 @@ class ShortUrlDetailSerializer(serializers.ModelSerializer):
             'last_accessed': {'read_only': True},
             'user': {'read_only': True},
         }
+
+    def get_created_at(self, obj):
+        print(obj.created_at.date())
+        return obj.created_at.date()  # Returns only the date part
 
 
     def get_shorten_url(self, obj):

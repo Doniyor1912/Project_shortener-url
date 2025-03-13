@@ -27,27 +27,25 @@ $(document).ready(function () {
                 
 
             },
-            error: function(xhr) {
-
-                // let errorMessage = "An unexpected error occurred.";
-                // if (xhr.responseJSON) {
-                //     if (xhr.responseJSON.username) {
-                //         errorMessage = xhr.responseJSON.username[0];
-                //     }else if (xhr.responseJSON.error) {
-                //         errorMessage = xhr.responseJSON.error;
-                //     }
-                // }
-                // else if (xhr.responseJSON && xhr.responseJSON.error) {
-                //     errorMessage = xhr.responseJSON.error;
-                // } else if (xhr.responseText) {
-                //     errorMessage = xhr.responseText;
-                // }
-
+            error: function (xhr) {
+                let errorMsg = "";
+                let errors = xhr.responseJSON; // Extract JSON error response
+        
+                if (errors) {
+                    Object.keys(errors).forEach(function (key) {
+                        errorMsg += errors[key].join("<br>") + "<br>"; // Format error messages
+                    });
+                } else {
+                    errorMsg = "An unknown error occurred!";
+                }
+        
                 Swal.fire({
-                    title: 'Error!',
-                    text: xhr.responseText,
-                    icon: 'error'
-                });}
+                    icon: "error",
+                    title: "Error!",
+                    html: errorMsg,  // Use 'html' instead of 'text' to allow line breaks
+                    confirmButtonColor: "#d33",
+                });
+            }
         });
         
     });
