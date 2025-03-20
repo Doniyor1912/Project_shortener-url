@@ -1,5 +1,4 @@
 from pathlib import Path
-
 from django.utils.translation import gettext_lazy as _
 import environ
 import os
@@ -15,6 +14,7 @@ BASE_DIR = root()
 
 # Application definition
 INSTALLED_APPS = [
+    'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,6 +44,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -64,10 +65,11 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.i18n',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -76,6 +78,9 @@ TEMPLATES = [
         },
     },
 ]
+
+print(f'82-------------->{BASE_DIR}')
+print(f"83-------------->{os.path.join(BASE_DIR, "templates")}")
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
@@ -154,7 +159,7 @@ LANGUAGES = [
    ('ru', _('Russian')),
 ]
 
-
+LOCALE_PATHS = BASE_DIR, 'locale'  # Folder where translations are stored
 
 
 # Static files (CSS, JavaScript, Images)

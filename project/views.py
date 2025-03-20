@@ -1,11 +1,9 @@
+from datetime import datetime
 from django.db.models.functions import TruncDate
 from django.shortcuts import redirect
 from django.utils.timezone import now
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import generics, status, serializers, mixins, viewsets
-from rest_framework.filters import SearchFilter
+from rest_framework import generics, status, serializers, viewsets
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.viewsets import GenericViewSet
 
 from .models import Shortened_db
 from .paginations import BasePagination
@@ -56,24 +54,35 @@ class URLDetails(viewsets.ModelViewSet):
 
 
     def get_queryset(self):
+
         queryset = Shortened_db.objects.filter(user=self.request.user).order_by('-created_at')
 
-        status = self.request.query_params.get('status')
-        created_at = self.request.query_params.get('created_at')
+
         search_short = self.request.query_params.get('search_short')
-        search_origin = self.request.query_params.get('search_origin')
+        # search_origin = self.request.query_params.get('search_origin')
+        start_date = self.request.query_params.get('start_date')
+        end_date = self.request.query_params.get('end_date')
+        status = self.request.query_params.get('status')
+
+
 
         if status:
             queryset = queryset.filter(status=status)
 
-        if created_at:
-            queryset = queryset.annotate(created_date=TruncDate('created_at')).filter(created_date=created_at)
+        if start_date and end_date:
+            try:
+                start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+                end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
+                queryset = queryset.filter(created_at__date__range=[start_date, end_date])
+            except ValueError:
+                pass  # Ignore invalid date formats
 
         if search_short:
-            queryset = queryset.filter(shorten_url=search_short)
+            short_url = search_short.split('/')[-1]
+            queryset = queryset.filter(shorten_url=short_url)
 
-        if search_origin:
-            queryset = queryset.filter(origin_url=search_origin)
+        # if search_origin:
+        #     queryset = queryset.filter(origin_url=search_origin)
 
         return queryset
 

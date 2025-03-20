@@ -4,9 +4,13 @@ $(document).ready(function () {
         window.location.href = "./register.html";
     }),
 
+
+
     $('#share_lnk').on('click', function () {
         $('.visible_link').slideToggle('fast'); // Add sliding animation
     });
+
+
 
     // Login
     $("#login").click(function () {
@@ -167,28 +171,26 @@ $(document).ready(function () {
             
         });
     });
+
+
+    $(document).ready(function() {
+        $(".lang-option").click(function() {
+            var selectedLang = $(this).data("lang");
+            
+            // Change button text and flag
+            var selectedText = $(this).text();
+            var selectedFlag = $(this).find("img").attr("src");
+            $("#languageDropdown").html(`<img id="selectedFlag" src="${selectedFlag}" width="20"> ${selectedText}`);
+
+            // Redirect to selected language URL
+            var currentUrl = window.location.href;
+            var newUrl = currentUrl.replace(/\/(uz|ru|en)\//, "/" + selectedLang + "/");
+            window.location.href = newUrl;
+        });
+    });
+
 });
 
-
-$(document).ready(function () {
-    let user = $('#myTable');
-    let table = user.DataTable({
-        pageLength: 5,
-        lengthChange: false,
-        ordering: false,
-        searching: false,
-        paging: false,
-        info:false,
-        columnDefs: [
-            { targets: 0, width: "20%" },
-            { targets: 1, width: "20%" },
-            { targets: 2, width: "15%" },
-            { targets: 3, width: "10%" },
-            { targets: 4, width: "10%" },
-            { targets: 5, width: "10%" }
-        ],
-
-        });
 
 
 
@@ -198,6 +200,12 @@ $(document).ready(function () {
         
             $('#submit_btn').on('click', function () {
                 const originUrl = $('#input_url').val();
+
+
+                if (!originUrl) {
+                    alert("Please enter a URL!");
+                    return;
+                }
         
                 $.ajax({
                     url: 'http://127.0.0.1:8000/api/2/shorten-url/',
@@ -225,7 +233,6 @@ $(document).ready(function () {
                 });
             });
         });
-    })
         //##########################--------COPY-BUTTON-----------################################### 
         $(document).ready(function() {
             // Handle Copy Button Click

@@ -1,36 +1,58 @@
+document.addEventListener("DOMContentLoaded", function () {
+    const profileBtn = document.getElementById("profile-btn");
+    const arrowIcon = document.getElementById("arrowIcon");
+
+    profileBtn.addEventListener("click", function () {
+        arrowIcon.classList.toggle("rotate-up");
+    });
+});
+
+
+
 $(document).ready(function () {
+
+
     let token = localStorage.getItem("token");
     let username = localStorage.getItem("username"); 
 
     if (!token) {
         window.location.href = "index.html"; 
     }
-    $("#profile_title").text(username);
+    $("#welcome-tooltip").text(username);
+
+
+    // --------------------------------------------------------
+
+     // Profile Drop-down Menu:
+     $(".profile-btn").click(function (event) {
+        event.stopPropagation();
+        $(".profile-container").toggleClass("active");
+    });
+
+    $(document).click(function (event) {
+        if (!$(event.target).closest(".profile-container, .profile-btn").length) {
+            $(".profile-container").removeClass("active");
+        }
+    });
+
+
+    // Welcome User Text Animation:
+    let tooltip = $("#welcome-tooltip");
+    tooltip.css({ opacity: "1", transform: "translateY(0)", padding: "16px" });
+
+
+    setTimeout(() => {
+        tooltip.css({ opacity: "0", transform: "translateY(0)" });
+        setTimeout(() => tooltip.remove(), 500);
+    }, 3000);
+
+
 
 
 
     //############################### LOGOUT ###############################
-    $("#logout_btn").click(function (e) {
-        e.preventDefault(); // Prevent default button behavior
-
-
-        Swal.fire({
-            title: "You will be logged out!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Logout",
-            cancelButtonText: "Cancel",
-            customClass: {
-                popup: "custom-swal-popup",
-                confirmButton: "swal-confirm-btn",
-                cancelButton: "swal-cancel-btn"
-                }
-        }).then((result) => {
-            if (result.isConfirmed) logout()
-            else if (result.dismiss === Swal.DismissReason.cancel) Swal.close()
-        });
-
-    
+    $("#logout_btn").click(function () {
+        logout()
     });
 
     // ##############################################################################################################################
@@ -38,6 +60,7 @@ $(document).ready(function () {
     let user = $('#userTable');
 
     let table = user.DataTable({
+        stateSave: true, // Keeps pagination state
         scrollX:true,
         processing: true,
         serverSide: true,
@@ -58,12 +81,15 @@ $(document).ready(function () {
 
             data: function (d) {  
                 d.search_short = $('#searchInput_short').val();
-                d.search_origin = $('#searchInput_origin').val();
-                d.created_at = $('#dateFilter').val();
+                d.start_date = $("#startDate").val();
+                d.end_date = $("#endDate").val(); 
                 d.status = $('#statusFilter').val();
 
-                d.page = Math.floor(d.start / d.length) + 1; // Calculate page correctly
-                d.page_size = d.length;  // Ensure Django receives correct page size
+
+                // d.page = Math.floor(d.start / d.length) + 1; // Calculate page correctly
+                // d.page_size = d.length;  // Ensure Django receives correct page size
+
+
             },
 
             dataSrc: function (json) {
@@ -233,38 +259,43 @@ $(document).ready(function () {
 
 
     $("#filterBtn").click(function () {
+        let user = $('#userTable').DataTable();
+        user.ajax.reload(null, false); // false = Keep the current page
         $.confirm({
             title: 'Filter Data',
             content: `
-                <div>
-                    <label for="searchInput_short">Search by Short Link:</label>
-                    <input type="text" id="searchInput_short" class="form-control" placeholder="Enter your Short Link">
+                <div class="filter-container">
+                    <div class="filter-row">
+                        <label for="searchInput_short">Short Link:</label>
+                        <input type="text" id="searchInput_short" class="form-control" placeholder="Enter Short Link">
+                    </div>
+
+                    <div class="filter-row">
+                        <label>Date:</label>
+                        <div class="date-filter">
+                            <button id="fromDateBtn" class="btn btn-outline-primary">From</button>
+                            <input type="date" id="startDate" class="form-control">
+                            <button id="toDateBtn" class="btn btn-outline-primary">To</button>
+                            <input type="date" id="endDate" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="filter-row">
+                        <label for="statusFilter">Status:</label>
+                        <select id="statusFilter" class="form-control">
+                            <option value="">All</option>
+                            <option value="1">Active</option>
+                            <option value="0">Inactive</option>
+                        </select>
+                    </div>
                 </div>
 
-                <div>
-                    <label for="searchInput_origin">Search by Origin Link:</label>
-                    <input type="text" id="searchInput_origin" class="form-control" placeholder="Enter your Origin Link">
-                </div>
 
-
-                <div>
-                    <label>Date:</label>
-                    <input type="date" id="dateFilter" class="form-control">
-                </div>
-                
-                <div>
-                    <label>Status:</label>
-                    <select id="statusFilter" class="form-control">
-                        <option value="">All</option>
-                        <option value="1">Active</option>
-                        <option value="0">Inactive</option>
-                    </select>
-                </div>
             `,
             buttons: {
                 filter: {
-                    text: 'Apply Filter',
-                    btnClass: 'btn-blue',
+                    text: 'Apply',
+                    btnClass: 'btn-dark blue',
                     action: function () {
                         let user = $('#userTable').DataTable();
                         user.ajax.reload();
@@ -400,11 +431,11 @@ $(document).ready(function () {
 
         // ------------------------------------------------------
 
+
         // Handle Delete Button with SweetAlert2
     $(document).on('click', '.delete-link', function () {
         const id = $(this).data('id');  // Get the ID from the data attribute
 
-        // Show confirmation dialog using Swal.fire
         Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
@@ -424,11 +455,6 @@ $(document).ready(function () {
                         "Authorization": "Token " + token
                     },
                     success: function () {
-                        Swal.fire(
-                            'Deleted!',
-                            'Your link has been deleted.',
-                            'success'
-                        );
                         $('#userTable').DataTable().ajax.reload(); // Refresh DataTable
                     },
                     error: function (xhr, status, error) {
@@ -444,13 +470,6 @@ $(document).ready(function () {
         });
     });
 
-
-
-
-
-
-
-                
 
 
 
@@ -506,15 +525,7 @@ $(document).ready(function () {
                     },
                     success: function() {
                         localStorage.removeItem("token");
-                        Swal.fire({
-                                    title: "Logged Out",
-                                    text: "You have been logged out successfully!",
-                                    icon: "success",
-                                    timer: 2000,
-                                    showConfirmButton: false
-                                }).then(() => {
-                                    window.location.href = "index.html";
-                                });
+                        window.location.href = "index.html";
                     },
                     error: function(xhr) {
                         alert("Logout failed: " + xhr.responseText);

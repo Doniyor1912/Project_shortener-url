@@ -1,38 +1,35 @@
-*{
-    padding: 0;
-    margin: 0;
-}
+
 
 .main {
     /* background-image: url("../images/main_foto.png"); */
-    background-color:  #0D1117 !important;
+    background-image: url("../images/Main\ Page.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    width: 1600px;
+    width: 1585px;
     max-height: 100%;
-    /* height: 950px; */
     font-family: Arial, sans-serif;
+    overflow-x: auto;
     }
 
 
 /* Header Styles */
 .header {
-    background-color: #131722; /* Dark background */
-    padding: 20px 40px; /* Add padding */
-    display: flex; /* Make header a flex container */
-    justify-content: center; /* Space between logo and buttons */
-    align-items: center; /* Center items vertically */
+    /* background-color: #131722;  */
+    padding: 20px 40px; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
     width: 100%;
 }
 
 /* Navbar Styles */
 .navbar {
-    width: 80%; /* Full width */
+    width: 75%; 
     max-width: 1200px;
     display: flex;
-    justify-content: space-between; /* Space between logo and buttons */
-    align-items: center; /* Center items vertically */
+    justify-content: space-between; 
+    align-items: center; 
 }
     
     
@@ -48,7 +45,7 @@
 }
 
 
-            /* Buttons*/
+/* Buttons*/
     
 /* Login Button */
 .btn-login {
@@ -113,9 +110,6 @@
 
 
 
-
-            /* Texts */
-
 /* Login Text */
 .login-text{
     font-family: Inter;
@@ -152,12 +146,7 @@
     color: rgb(69, 67, 67);
 }
     
-.container {
-    max-width: 1140px;
-    margin: auto;
-    padding-top: 20px;
-    /* overflow: visible !important; */
-}
+
 
 .text-center {
     text-align: center; /* Center text horizontally */
@@ -214,8 +203,19 @@
     height: 65px;
     line-height: 1.9;
     box-shadow: 0 0 8px rgba(0, 102, 255, 0.5);
+    transition: all 0.3s;
 
 }
+
+.input-container:hover {
+    transform: scale(1.02); /* Smaller hover effect */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Softer shadow */
+}
+
+.input-container input:hover {
+    backdrop-filter: blur(8px); /* Slightly more blur on hover */
+}
+
 
 input[type="text"]:-webkit-autofill,
 input[type="url"]:-webkit-autofill {
@@ -240,10 +240,13 @@ input[type="url"]:-webkit-autofill {
     flex: 1;
     padding: 8px;
     background: transparent;
+    backdrop-filter: blur(5px); /* Blur effect */
+    transition: all 0.3s ease-in-out;
     border: none;
     color: #C9CED6;
     outline: none;
 }
+
 
 /* Shorten Button */
 .shorten-btn {
@@ -286,29 +289,57 @@ input[type="url"]:-webkit-autofill {
     color: #ff007f;
 }
 
+.text-center_short{
+    font-size: 14px !important;
+    margin-top: 5px;
+}
+
 /*      ---------------------------------------------------------------> */
 
-.table-responsive {
-    max-width: 1250px;
-    margin: auto;
-}
+
 .container{
-    border: 2px solid rgba(30, 103, 230, .2);
+    width: 1000px;
 }
 
 #myTable {
-    table-layout: fixed; /* Forces fixed column widths */
-    width: 100%; /* Ensures table fits inside its container */
+    table-layout: fixed;
+    width: 100%;
+    border: none;
 }
 
-#myTable th, #myTable td {
+#myTable th {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    background-color: #0D1117;
+    background: rgba(82, 78, 78, 0.3) !important;
+    backdrop-filter: blur(10px); /* Adds the blurred effect */
     color: whitesmoke;
-
+    padding: 20px  20px !important;
+    border:  none;
 }
+
+#myTable td{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: whitesmoke;
+    padding-top: 15px;
+    background: rgba(20, 20, 30, 0.6); /* Dark semi-transparent */
+    backdrop-filter: blur(10px); /* Adds the blurred effect */
+    padding-left: 20px !important;
+    align-items: center;
+    border: none;
+}
+
+
+/* Define specific widths for each column */
+th:nth-child(1), td:nth-child(1) { width: 20%; }
+th:nth-child(2), td:nth-child(2) { width: 30%; }
+th:nth-child(3), td:nth-child(3) { width: 10%; }
+th:nth-child(4), td:nth-child(4) { width: 10%; }
+th:nth-child(5), td:nth-child(5) { width: 10%; }
+th:nth-child(6), td:nth-child(6) { width: 10%; }
+
 
 .fab.fa-youtube { color: red; font-size: 22px; margin-right: 4px;}
 .fab.fa-telegram { color: #0088cc; font-size: 22px; margin-right: 4px;}
@@ -320,20 +351,29 @@ input[type="url"]:-webkit-autofill {
 /* --------------------------------------------------------last-bottom-button */
 
 .btn_lastrow{
-    width: 1300px !important;
-    background-color: #131722;
+    width: 100%;
+    height: 70px;
+    padding: 15px;
     display: flex;
     justify-content: center;
+    position: relative;
+    top: -85px;
+    background: rgba(255, 255, 255, 0.1); 
+    backdrop-filter: blur(1.5px); 
+    /* -webkit-backdrop-filter: blur(10px);  */
+    border-radius: 5px; 
+    border: 1px solid rgba(255, 255, 255, 0.2); 
 }
 
 #btn_toggle {
-    color: rgb(71, 47, 177);
+    color: #0066ff;
     padding: 10px 5px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     align-items: center;
     text-decoration: none;
+    font-size: 18px;
 }
 #btn_toggl {
     color: white;
@@ -343,6 +383,7 @@ input[type="url"]:-webkit-autofill {
     cursor: pointer;
     align-items: center;
     text-decoration: none;
+
 }
 
 

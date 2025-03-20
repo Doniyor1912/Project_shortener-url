@@ -17,10 +17,10 @@ $(document).ready(function () {
             success: function (response) {
                 Swal.fire({
                     title: 'Success!',
-                    text: 'Registration successful',
-                    icon: 'success', 
+                    text: 'Operation completed successfully.',
+                    icon: 'success',
+                    timer: 2000,
                     showConfirmButton: false,
-                    timer: 1500
                 }).then(() => {
                     window.location.href = './index.html';
                 });
