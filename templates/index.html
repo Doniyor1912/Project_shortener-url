@@ -28,11 +28,11 @@
 
                     <div class="user-btns">
                         <button class="btn-login" id="login">
-                            <span class="login-text">Login</span>
+                            <span data-i18n="login" class="login-text">Login</span>
                             <i class="fas fa-sign-in-alt login-icon"></i>
                         </button>
                         <button class="btn-register" id="register"> 
-                            <span class="register-text">Register</span>
+                            <span data-i18n="register" class="register-text">Register</span>
                         </button>
                     </div>
     
@@ -47,21 +47,21 @@
     
         <section>
             <div class="containerbody">
-                <h1 class="text-center">Shorten Your Loooong Links :)</h1>
+                <h1 data-i18n="welcome" class="text-center">Shorten Your Loooong Links :)</h1>
                 <div class="center-container">
-                    <p class="p-text">Linkly is an efficient and easy-to-use URL shortening service that streamlines your online experience.</p>
+                    <p data-i18n="welcome_text" class="p-text">Linkly is an efficient and easy-to-use URL shortening service that streamlines your online experience.</p>
                 </div>
                 <main class="main2">
                     <div class="input-wrapper">
                         <div class="input-container">
                             <span class="icon">🔗</span>
                             <input type="text" class="url-input" id="input_url" placeholder="Enter the link here">
-                            <button class="shorten-btn" id="submit_btn">Shorten!</button>
+                            <button data-i18n="shortener_btn" class="shorten-btn" id="submit_btn">Shorten!</button>
                         </div>
                     </div>
 
                     <div class="container_short">
-                        <h2 class="short_text">Your short URL is ready!</h2>
+                        <h2 data-i18n="short-url_title" class="short_text">Your short URL is ready!</h2>
                         <div class="short-url-box">
                            <h6 class="short_link1" id="short_lnk"></h6>
                             <button class="btn btn-primary share_link_short" id="share_lnk">
@@ -84,12 +84,12 @@
                                 </a>
                             </div>
                         </div>
-                        <p class="text-center_short">Click the link to open or use the buttons to share easily!</p>
+                        <p data-i18n="short-url_text" class="text-center_short">Click the link to open or use the buttons to share easily!</p>
                     </div>
 
                 </main>
                 <div class="center-container1">
-                    <p id="shortenedLink">You can create <span class="zero_five">05</span> more links. Register Now to enjoy Unlimited usage </p>
+                    <p data-i18n="datatable_title" id="shortenedLink">You can create <span class="zero_five">05</span> more links. Register Now to enjoy Unlimited usage </p>
                 </div>
             </div>
         </section>
@@ -99,12 +99,12 @@
                 <table id="myTable" class="table hover">
                     <thead>
                         <tr>
-                            <th>Short Link</th>
-                            <th>Original Link</th>
-                            <th>QR Code</th>
-                            <th>Clicks</th>
-                            <th>Status</th>
-                            <th>Date</th>
+                            <th data-i18n="data_short">Short Link</th>
+                            <th data-i18n="data_origin">Original Link</th>
+                            <th data-i18n="data_qrcode">QR Code</th>
+                            <th data-i18n="data_clicks">Clicks</th>
+                            <th data-i18n="data_status">Status</th>
+                            <th data-i18n="data_date">Date</th>
                         </tr>
                         
                     </thead>
@@ -226,7 +226,7 @@
                 <tfoot>
                     <tr>
                         <div class="btn_lastrow">    
-                            <a href="./register.html" id="btn_toggle">Register Now</a><span id="btn_toggl" >to enjoy Unlimited History</span>
+                            <a data-i18n="last_register" href="./register.html" id="btn_toggle">Register Now</a><span data-i18n="last_register-text" id="btn_toggl" >to enjoy Unlimited History</span>
                        </div>
                     </tr>
 

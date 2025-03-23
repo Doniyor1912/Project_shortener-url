@@ -1,0 +1,18 @@
+{
+    "login": "Login",
+    "register": "Register",
+    "welcome": "Shorten Your Loooong Links :)",
+    "welcome_text": "Linkly is an efficient and easy-to-use URL shortening service that streamlines your online experience.",
+    "short-url_title": "Your short URL is ready!",
+    "short-url_text": "Click the link to open or use the buttons to share easily!",
+    "datatable_title":"You can create  more links. Register Now to enjoy Unlimited usage",
+    "data_short":"Short Link",
+    "data_origin":"Original Link",
+    "data_qrcode":"QR Code",
+    "data_clicks":"Clicks",
+    "data_status":"Status",
+    "data_date":"Date",
+    "last_register": "Register Now",
+    "last_register-text": "to enjoy Unlimited History"
+  }
+  
