@@ -25,7 +25,7 @@
                     </h1>
                 </div>
 
-
+                <div>
                     <div class="user-btns">
                         <button class="btn-login" id="login">
                             <span data-i18n="login" class="login-text">Login</span>
@@ -35,8 +35,14 @@
                             <span data-i18n="register" class="register-text">Register</span>
                         </button>
                     </div>
-    
 
+                    <select id="languageSwitcher">
+                        <option value="en">English</option>
+                        <option value="uz">Uzbek</option>
+                        <option value="ru">Russian</option>
+                    </select>
+    
+                </div>
                     
 
 
@@ -55,7 +61,7 @@
                     <div class="input-wrapper">
                         <div class="input-container">
                             <span class="icon">🔗</span>
-                            <input type="text" class="url-input" id="input_url" placeholder="Enter the link here">
+                            <input data-i18n="input_text" type="text" class="url-input" id="input_url" placeholder="Enter the link here">
                             <button data-i18n="shortener_btn" class="shorten-btn" id="submit_btn">Shorten!</button>
                         </div>
                     </div>
@@ -88,9 +94,6 @@
                     </div>
 
                 </main>
-                <div class="center-container1">
-                    <p data-i18n="datatable_title" id="shortenedLink">You can create <span class="zero_five">05</span> more links. Register Now to enjoy Unlimited usage </p>
-                </div>
             </div>
         </section>
     <!------------------------------------------------------------------------------------------------------------------>
@@ -247,6 +250,9 @@
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.js"></script>
     <script src="../static/javascript/index.js"></script>
+    <!-- lang -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next/23.7.2/i18next.min.js"></script>
+
 
 </body>
 </html>

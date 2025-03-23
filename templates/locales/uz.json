@@ -1,18 +1,19 @@
 {
-    "login": "Login",
-    "register": "Register",
-    "welcome": "Shorten Your Loooong Links :)",
-    "welcome_text": "Linkly is an efficient and easy-to-use URL shortening service that streamlines your online experience.",
-    "short-url_title": "Your short URL is ready!",
-    "short-url_text": "Click the link to open or use the buttons to share easily!",
-    "datatable_title":"You can create  more links. Register Now to enjoy Unlimited usage",
-    "data_short":"Short Link",
-    "data_origin":"Original Link",
-    "data_qrcode":"QR Code",
-    "data_clicks":"Clicks",
+    "login": "Kirish",
+    "register": "Ro'yxatdan o'tish",
+    "welcome": "Uzun Havolalarni Qisqartiring :)",
+    "welcome_text": "Qisqa — bu tezkor va qulay URL qisqartirish xizmati. Bir marta sinab ko'ring, farqni his qiling!",
+    "input_text": "Bu yerga havolani kiriting",
+    "short-url_title": "Qisqa URL manzilingiz tayyor!",
+    "short-url_text": "Ochish uchun havolani bosing yoki osongina almashish uchun tugmalardan foydalaning!",
+    "datatable_title":"Siz ko'proq havolalar yaratishingiz mumkin. Cheksiz foydalanish uchun hozir ro'yxatdan o'ting",
+    "data_short":"Qisqa havola",
+    "data_origin":"Asl havola",
+    "data_qrcode":"QR kodi",
+    "data_clicks":"Bosishlar",
     "data_status":"Status",
-    "data_date":"Date",
-    "last_register": "Register Now",
-    "last_register-text": "to enjoy Unlimited History"
+    "data_date":"Sana",
+    "last_register": "Hozir roʻyxatdan oʻting",
+    "last_register-text": "Cheksiz tarixdan bahramand bo'lish"
   }
   
