@@ -3,130 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>URL Shortener</title>
+    <title>Link Shortener</title>
     
     <!-- CSS -->
-    
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 
+
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-
-    <link rel="stylesheet" href="../static/css/main.css">
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.css">
-
-
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
-
-    <style>
-
-    </style>
+    
+    <!-- Font Awesome (To‘g‘rilangan) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 
 </head>
-<body>
+</head>
+<body class="main-body">
 
-    <!-- Header -->
     <header class="header">
         <nav class="navbar">
             <div class="logo-container">
-                <img src="../static/images/Linkly.png" alt="Logo" class="logo">
+                <img src="../static/images/Linkly.png" alt="Linkly Logo" class="logo">
             </div>
+
+
+            <!-- Main input: -->
             <div class="input-wrapper">
                 <div class="input-container">
-                    <input type="text" class="url-input" id="url_input" placeholder="Enter the link here">
-                    <button class="shorten-btn" id="btn_submit">Shorten </button>
+                    <span class="icon">🔗</span>
+                    <input type="text" class="url-input" data-i18n="main_input_placeholder" placeholder="Enter the link here" >
+                    <button class="shorten-btn" data-i18n="main_button_shorten">Shorten Now!</button>
                 </div>
+    
+                <div id="short-url-box" class="hidden">
+                    <h3 data-i18n="main_short_url_title">Your short URL is ready!</h3>
+                    <div class="short-url">
+                        <a id="short-url" href="#" target="_blank"></a>
+                        <button id="copy-btn">📋</button>
+                    </div>
+                </div>
+    
             </div>
-
+            
+            <!-- Profile droptown: -->
             <div class="profile-container">
-                <button class="profile-btn" id="profile-btn" data-bs-toggle="dropdown" aria-expanded="false">
-                    <div class="welcome-tooltip" id="welcome-tooltip"></div>
+                <button class="profile-btn" id="profile-btn">
+                    <div class="welcome-tooltip" id="welcome-tooltip" data-i18n="main_welcome">Welcome!</div>
                     <i class="fas fa-user-circle"></i>
-                    <span>Profile</span>
-                    <i id="arrowIcon" class="fas fa-chevron-down"></i>
+                    <span id="username" class="username-txt"></span>
+                    <i class="fas fa-chevron-down"></i>
                 </button>
-
                 <div class="profile-dropdown" id="profile-dropdown">
-                    <a href="profile.html">Profile</a>
-                    <button class="logout-text" id="logout_btn">Logout</button>
+                    <a href="profile.html" data-i18n="main_profile_view">View Profile</a>
+                    <button class="logout-text" id="logout-btn" data-i18n="main_profile_logout">Logout</button>
                 </div>
             </div>
             
+
+            <!-- Select lang: -->
+            <select id="language-selector" class="language-select">
+                <option value="en">English 🌐</option>
+                <option value="uz">Uzbek 🌐</option>
+                <option value="ru">Russian 🌐</option>
+            </select>
+
         </nav>
     </header>
+    
 
-    <!-- Navigation Tabs -->
-    <section class="nav-tabs">
-        <ul class="tabs">
-            <a href=""><li class="active"><i class="fas fa-history"></i> History</li></a>
-           <a href=""> <li class="active"><i class="fas fa-chart-line"></i> Statistics</li></a>
-           <a href=""> <li class="active"><i class="fas fa-mouse-pointer"></i> Click Stream</li></a>
-            <a href=""><li class="active"><i class="fas fa-cog"></i> Settings</li></a>
-        </ul>
-    </section>
 
-    <!-- Main Table -->
-    <section class="container_last">
-        <div class="container mt-4">
-            <div class="table-header d-flex justify-content-between align-items-center mb-3">
-                <h3 id="count_link"></h3>
-                <div class="table-actions">
-                    <button id="filterBtn" class="filter-btn">
-                        <i class="fas fa-filter"></i> Filter
-                    </button>
-                </div>
+    <!-- Main table: -->
+    <section class="container main-table">
+
+
+        <!-- Main filter -->
+        <button id="open-filter-modal" class="filter-btn">
+            <i class="fas fa-filter"></i> <span data-i18n="main_filter_button">Filter</span>
+        </button>
+        
+        <div id="filter-modal" class="modal">
+            <div class="modal-contents">
+                <span class="close">&times;</span>
+                <h3 class="filter-text" data-i18n="main_filter_title">Filter Options</h3>
+                
+                <label for="short-link-filter" data-i18n="main_filter_short_link">Short Link:</label>
+                <input type="text" id="short-link-filter" placeholder="Search by Short Link" data-i18n="main_filter_short_link_placeholder">
+                
+                <label for="status-filter" data-i18n="main_filter_status">Status:</label>
+                <select id="status-filter">
+                    <option value="" data-i18n="main_filter_status_all">All Status</option>
+                    <option value="Active" data-i18n="main_filter_status_active">Active</option>
+                    <option value="Inactive" data-i18n="main_filter_status_inactive">Inactive</option>
+                </select>
+    
+                <label for="start-date-filter" data-i18n="main_filter_start_date">Start Date:</label>
+                <input type="date" id="start-date-filter">
+    
+                <label for="end-date-filter" data-i18n="main_filter_end_date">End Date:</label>
+                <input type="date" id="end-date-filter">
+                
+                <button id="apply-filter" class="apply-btn" data-i18n="main_filter_apply">Apply Filter</button>
+                <button id="clear-filter-btn" class="clear-btn" data-i18n="main_filter_clear">Clear Filters</button>
             </div>
-            <h2></h2>
+        </div>
+        
 
+        <!-- Table body: -->
+        <div id="history-count" class="history-title" data-i18n="main_history_title">History ({count})</div>
         <div class="table-container">
-            <table class="display" id="userTable">
+            <table id="urlTable">
                 <thead>
                     <tr>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
+                        <th data-i18n="main_table_history">History</th>
+                        <th data-i18n="main_table_short_link">Short Link</th>
+                        <th data-i18n="main_table_original_link">Original Link</th>
+                        <th data-i18n="main_table_clicks">Clicks</th>
+                        <th data-i18n="main_table_qr_code">QR Code</th>
+                        <th data-i18n="main_table_status">Status</th>
+                        <th data-i18n="main_table_date">Date</th>
+                        <th data-i18n="main_table_actions">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
-
-                </tbody>
+                <tbody id="url-table-body"></tbody>
             </table>
         </div>
     </section>
-
-<!--------------------------------->
-
-    <!-- jQuery JS -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- swal alert -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
-    <!-- SweetAlert2 CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <!-- for AJAX -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-     <!-- datatable -->
-    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
-    <!-- dropdown -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.js"></script>
+    
+    
 
 
-    <script type="module" src="../static/javascript/main.js"></script>
-
+    <!-- jQuery va scriptlar -->
+ <!-- jQuery -->
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+ <!-- Kutubxonalar -->
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+ <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>    
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.js"></script>
+ <!-- Asosiy JS -->
+ <script src="/static/javascript/main.js"></script>
 </body>
 </html>

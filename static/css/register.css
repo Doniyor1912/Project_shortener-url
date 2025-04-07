@@ -1,108 +1,106 @@
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+
 
 body {
-    font-family: sans-serif;
-    background-color:  #0D1117;
-    /* background: url("../images/main_foto.png"); */
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
+    height: 100vh;
+    background: #0d1117;
+    color: white;
 }
 
-.container {
-    background: rgba(20, 20, 30, 0.9); /* Dark semi-transparent */
-    padding: 20px;
-    border: rgb(167, 159, 159) solid 2px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 400px;
+/* Register Container */
+.register-container {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2rem;
+    border-radius: 12px;
+    width: 350px;
+    text-align: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease-in-out;
 }
+
+
 
 h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #ffffff;
+    margin-bottom: 1rem;
+    font-size: 24px;
 }
 
-.form-group {
-    margin-bottom: 15px;
-    color: #ffffff;
-}
-
-label {
-    display: block;
-    margin-bottom: 5px;
-}
-
-input[type="text"],
-input[type="email"],
-input[type="password"] {
+/* Inputlar */
+input {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    font-size: 1.1rem;
-    color: whitesmoke;
-    background-color: #444;
-    /* background-color: rgba(255, 255, 255, 0.966); */
-}
-
-input[type="text"]:hover,
-input[type="email"]:hover,
-input[type="password"]:hover {
-    background-color: beige;
-    color: black;
-}
-
-
-button {
-    background-color:rgb(13, 110, 253);
-    color: white;
-    padding: 10px 15px;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 8px;
     border: none;
-    border-radius: 4px;
-    cursor: pointer;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    font-size: 16px;
+    outline: none;
+    transition: all 0.3s;
+}
+
+/* Password input guruhi */
+.input-group {
+    position: relative;
     width: 100%;
-    margin-top: 10px;
+}
+
+/* Ko'z ikonasi */
+.input-group i {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.7);
+    transition: color 0.3s;
+}
+
+/* Hover effekti */
+.input-group i:hover {
+    color: white;
+}
+
+/* Input hover effekti */
+input:hover, input:focus {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Placeholder */
+input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Register Button (Ko'k rang - Login sahifasiga mos) */
+button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: #007bff;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
     transition: 0.3s;
 }
 
-button:hover{
-    background-color: #1163bb;
-    color: white;
-}
 
-
-
-
-#registration{
-    font-size: medium;
-}
-
-
+/* Login Link */
 .login-link {
-    margin-top: 20px;
-    text-align: center;
-    color: white;
-}
-
-.login-link a {
-    color: rgb(13, 110, 253);
-}
-
-/* Terms and conditions styling */
-.terms-group {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px; /* Consistent spacing */
-}
-
-.terms-group label {
-    margin-bottom: 0;
-    margin-left: 5px;
-}
-
-a{
+    font-size: 14px;
+    color: #007bff;
+    font-weight: bold;
     text-decoration: none;
+}
+
+/* Login link hover */
+.login-link:hover {
+    text-decoration: underline;
+    color: #0056b3;
 }

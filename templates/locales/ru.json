@@ -1,9 +1,10 @@
 {
-    "login": "Авторизоваться",
-    "register": "Зарегистрироваться",
-    "welcome": "Сократите свои длиннющие ссылки :)",
+    "login1": "войти",
+    "register1": "Регистрация",
+    "welcome": "Сократите длинные ссылки :)",
     "welcome_text": "Linkly — это эффективный и простой в использовании сервис сокращения URL-адресов, который упрощает вашу работу в Интернете.",
     "input_text": "Введите ссылку здесь",
+    "shortener_btn": "Сократить!",
     "short-url_title": "Ваш короткий URL готов!",
     "short-url_text": "Нажмите на ссылку, чтобы открыть ее, или используйте кнопки, чтобы легко поделиться!",
     "datatable_title":"Вы можете создать еще 05 ссылок. Зарегистрируйтесь сейчас, чтобы воспользоваться неограниченным использованием",
@@ -14,5 +15,57 @@
     "data_status":"Статус",
     "data_date":"Дата",
     "last_register": "Зарегистрируйтесь сейчас",
-    "last_register-text": "чтобы насладиться неограниченной историей"
+    "last_register-text": "чтобы насладиться неограниченной историей",
+
+
+
+    "login_title":"Вход!",
+    "login_username":"Имя пользователя",
+    "login_password":"Пароль",
+    "login_register_link":"Нет аккаунта? Зарегистрируйтесь",
+    "login_submit":"Войти",
+    "login_cancel":"Отмена",
+
+
+
+
+    "register_title":"Зарегистрировать аккаунт!",
+    "register_username":"Имя пользователя",
+    "email_password":"Электронная почта",
+    "register_password":"Пароль",
+    "register_confirm_password":"Подтвердите пароль",
+    "register_register_link":"Нет аккаунта? Войти",
+
+
+    
+
+    "main_input_placeholder": "Введите ссылку здесь",
+    "main_button_shorten": "Сократить!",
+    "main_short_url_title": "Ваша короткая ссылка готова!",
+    "main_welcome": "Добро пожаловать!",
+    "main_profile_view": "Профиля",
+    "main_profile_logout": "Выйти",
+    "main_filter_button": "Фильтр",
+    "main_filter_title": "Параметры фильтра",
+    "main_filter_short_link": "Короткая ссылка:",
+    "main_filter_short_link_placeholder": "Поиск по короткой ссылке",
+    "main_filter_status": "Статус:",
+    "main_filter_status_all": "Все статусы",
+    "main_filter_status_active": "Активный",
+    "main_filter_status_inactive": "",
+    "main_filter_start_date": "Дата начала:",
+    "main_filter_end_date": "Дата окончания:",
+    "main_filter_apply": "Применить фильтр",
+    "main_filter_clear": "Очистить фильтры",
+    "main_history_title": "История ({count})",
+    "main_table_history": "История",
+    "main_table_short_link": "Короткая ссылка",
+    "main_table_original_link": "Оригинальная ссылка",
+    "main_table_clicks": "Клики",
+    "main_table_qr_code": "QR Код",
+    "main_table_status": "Статус",
+    "main_table_date": "Дата",
+    "main_table_actions": "Действия"
+
+    
   }

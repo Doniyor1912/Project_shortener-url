@@ -79,8 +79,6 @@ TEMPLATES = [
     },
 ]
 
-print(f'82-------------->{BASE_DIR}')
-print(f"83-------------->{os.path.join(BASE_DIR, "templates")}")
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
@@ -137,7 +135,7 @@ REST_FRAMEWORK = {
     ],
 
     'DEFAULT_PAGINATION_CLASS': 'project.paginations.BasePagination',
-    'PAGE_SIZE': 10,
+    'PAGE_SIZE': 20,
 }
 
 # Default primary key field type
@@ -168,11 +166,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_TEST_ROOT = os.path.join(BASE_DIR, 'media/test/')
-
-
-
-
-
 
 
 

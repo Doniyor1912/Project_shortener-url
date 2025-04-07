@@ -83,4 +83,11 @@ class LoginSerializer(serializers.Serializer):
         return {"user": user, "token": token.key}
 
 
-
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'first_name', 'last_name']
+        extra_kwargs = {
+            'username': {'read_only': True},
+            'email': {'read_only': True},
+        }

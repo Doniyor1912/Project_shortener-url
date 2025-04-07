@@ -1,30 +1,181 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const profileBtn = document.getElementById("profile-btn");
-    const arrowIcon = document.getElementById("arrowIcon");
 
-    profileBtn.addEventListener("click", function () {
-        arrowIcon.classList.toggle("rotate-up");
-    });
-});
+
+
+
 
 
 
 $(document).ready(function () {
+    // ======================
+    // 1. CONSTANTS & CONFIG
+    // ======================
+    const API_BASE_URL = 'http://127.0.0.1:8000';
+    const ONE_MINUTE = 60 * 1000;
 
-
-    let token = localStorage.getItem("token");
-    let username = localStorage.getItem("username"); 
-
-    if (!token) {
-        window.location.href = "index.html"; 
+    // ======================
+    // 2. UTILITY FUNCTIONS
+    // ======================
+    function getAuthToken() {
+        return localStorage.getItem("token") || "";
     }
-    $("#welcome-tooltip").text(username);
 
+    if (!getAuthToken()) {
+        window.location.href = "./index.html"; 
+    }
 
-    // --------------------------------------------------------
+    const username = localStorage.getItem("username")
+    $("#username").text(username);
 
-     // Profile Drop-down Menu:
-     $(".profile-btn").click(function (event) {
+    function showMessage(type, message) {
+        Swal.fire({
+            icon: type === "success" ? "success" : "error",
+            title: type === "success" ? "Success!" : "Error!",
+            text: message,
+            showConfirmButton: true,
+            confirmButtonText: "OK"
+        });
+    }
+
+    function loadLanguage(lang) {
+        $.getJSON(`./locales/${lang}.json`, function (data) {
+            $("[data-i18n]").each(function () {
+                var key = $(this).data("i18n");
+                if (data[key]) {
+                    if ($(this).is("input, textarea")) {
+                        $(this).attr("placeholder", data[key]); // For input placeholders
+                    } else {
+                        $(this).html(data[key]); // For other elements
+                    }
+                }
+            });
+        });
+    }
+
+    // Load default language (English)
+    let selectedLang = localStorage.getItem("selectedLang") || "en";
+    $("#language-selector").val(selectedLang);
+    loadLanguage(selectedLang);
+
+    // Change language on selection
+    $("#language-selector").change(function () {
+        let newLang = $(this).val();
+        localStorage.setItem("selectedLang", newLang); // Save language preference
+        loadLanguage(newLang);
+    });
+
+    function showToast(message) {
+        const toast = document.createElement("div");
+        toast.textContent = message;
+        toast.style.position = "fixed";
+        toast.style.bottom = "20px";
+        toast.style.right = "20px";
+        toast.style.backgroundColor = "#333";
+        toast.style.color = "#fff";
+        toast.style.padding = "10px 20px";
+        toast.style.borderRadius = "5px";
+        toast.style.zIndex = "1000";
+        toast.style.opacity = "0";
+        toast.style.transition = "opacity 0.5s";
+    
+        document.body.appendChild(toast);
+    
+        // Fade in the toast
+        setTimeout(() => {
+            toast.style.opacity = "1";
+        }, 10);
+    
+        // Fade out and remove the toast after 3 seconds
+        setTimeout(() => {
+            toast.style.opacity = "0";
+            setTimeout(() => {
+                document.body.removeChild(toast);
+            }, 500);
+        }, 3000);
+    }
+
+    function loadUserUrls() {
+        if (window.userTable) {
+            window.userTable.ajax.reload();
+        }
+    }
+
+    // ======================
+    // 3. AUTH & SESSION MANAGEMENT
+    // ======================
+    // Last login notification
+    const lastLogin = localStorage.getItem("lastLogin");
+    const now = new Date().getTime();
+
+    if (!lastLogin || (now - lastLogin) > ONE_MINUTE) {
+        Swal.fire({
+            toast: true,
+            position: "top-end",
+            icon: "info",
+            title: "Welcome back! 🎉",
+            text: "Siz uzoq vaqt davomida tizimga kirmadingiz.",
+            showConfirmButton: false,
+            timer: 4000,
+            timerProgressBar: true,
+            background: "#0B1120",
+            color: "#ffffff"
+        });
+    }
+    localStorage.setItem("lastLogin", now);
+
+    // Logout functionality
+    document.getElementById("logout-btn").addEventListener("click", function () {
+        const token = getAuthToken();
+        if (!token) {
+            showMessage("error", "You are not logged in!");
+            return;
+        }
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "Do you really want to log out?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes",
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: "⏳ Logging out...",
+                    allowOutsideClick: false,
+                    didOpen: () => Swal.showLoading()
+                });
+
+                fetch(`${API_BASE_URL}/api/logout/`, {
+                    method: "POST",
+                    headers: {
+                        "Authorization": "Token " + token
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Logout failed');
+                    return response.json();
+                })
+                .then(data => {
+                    localStorage.removeItem("token");
+                    window.location.href = "index.html";
+                })
+                .catch(error => {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: error.message || "Something went wrong!",
+                        confirmButtonText: "OK"
+                    });
+                });
+            }
+        });
+    });
+
+    // ======================
+    // 4. UI COMPONENTS
+    // ======================
+    // Profile Dropdown
+    $(".profile-btn").click(function (event) {
         event.stopPropagation();
         $(".profile-container").toggleClass("active");
     });
@@ -35,105 +186,155 @@ $(document).ready(function () {
         }
     });
 
-
-    // Welcome User Text Animation:
+    // Welcome tooltip animation
     let tooltip = $("#welcome-tooltip");
-    tooltip.css({ opacity: "1", transform: "translateY(0)", padding: "16px" });
-
-
+    tooltip.css({ opacity: "1", transform: "translateY(0)" });
     setTimeout(() => {
         tooltip.css({ opacity: "0", transform: "translateY(0)" });
         setTimeout(() => tooltip.remove(), 500);
     }, 3000);
 
+    // History count
+    function updateHistoryCount() {
+        let tableBody = document.getElementById("url-table-body");
+        let rowCount = tableBody.getElementsByTagName("tr").length;
+        document.getElementById("history-count").innerText = `History (${rowCount})`;
+    }
+    
+    const observer = new MutationObserver(updateHistoryCount);
+    observer.observe(document.getElementById("url-table-body"), { childList: true });
 
+    // ======================
+    // 5. URL SHORTENER
+    // ======================
+    function showModal(shortLink) {
+        const successModal = $("#successModal");
+        $("#shortLink").attr("href", shortLink).text(shortLink);
+        successModal.css("display", "block");
+    }
 
-
-
-    //############################### LOGOUT ###############################
-    $("#logout_btn").click(function () {
-        logout()
+    $(".close-btn").click(function () {
+        $("#successModal").hide();
     });
 
-    // ##############################################################################################################################
-    // DataTable
-    let user = $('#userTable');
+    $(window).click(function (event) {
+        if (event.target.id === "successModal") {
+            $("#successModal").hide();
+        }
+    });
 
-    let table = user.DataTable({
-        stateSave: true, // Keeps pagination state
-        scrollX:true,
+    function shortenUrl() {
+        let originalUrl = $(".url-input").val().trim();
+        if (!originalUrl) {
+            showMessage("error", "Введите URL!");
+            return;
+        }
+    
+        if (!/^https?:\/\//i.test(originalUrl)) {
+            originalUrl = "http://" + originalUrl;
+        }
+
+        $.ajax({
+            url: `${API_BASE_URL}/api/shorter/`,
+            method: "POST",
+            contentType: "application/json",
+            headers: { "Authorization": "Token " + getAuthToken() },
+            data: JSON.stringify({ original_link: originalUrl }),
+            success: function (response) {
+                $(".url-input").val("");
+                showMessage("success", "✅ URL successfully shortened!");
+                loadUserUrls();
+                
+                if (response.short_link) {
+                    showModal(response.short_link);
+                }
+            },
+            error: function (xhr) {
+                let errorMessage = xhr.responseJSON?.message || "An error occurred! Please try again.";
+                showMessage("error", errorMessage);
+            }
+        });
+    }
+
+    $(".shorten-btn").on("click", shortenUrl);
+    $(".url-input").keypress(function (event) {
+        if (event.which === 13) shortenUrl();
+    });
+
+    // ======================
+    // 6. DATATABLE CONFIGURATION
+    // ======================
+    window.userTable = $('#urlTable').DataTable({
+        scrollX: false,
         processing: true,
         serverSide: true,
-        autoWidth: false,  
+        autoWidth: false,
         responsive: false,
-        pageLength: 10,
+        pageLength: 20,
         lengthChange: false,
         ordering: false,
         searching: false,
         paging: true,
-        info:false,
+        info: false, 
+        order: [[5, 'desc']],
         ajax: {
-            url: 'http://127.0.0.1:8000/api/shorten/get-all/',
+            url: `${API_BASE_URL}/api/shorten/list/`,
             type: 'GET',
             headers: {
-                "Authorization": "Token " + token
+                "Authorization": "Token " + getAuthToken()
             },
-
             data: function (d) {  
-                d.search_short = $('#searchInput_short').val();
-                d.start_date = $("#startDate").val();
-                d.end_date = $("#endDate").val(); 
-                d.status = $('#statusFilter').val();
-
-
-                // d.page = Math.floor(d.start / d.length) + 1; // Calculate page correctly
-                // d.page_size = d.length;  // Ensure Django receives correct page size
-
-
+                let savedFilters = JSON.parse(localStorage.getItem('globalFilters')) || {};
+                d.search_short = savedFilters.search_short ?? $('#searchInput_short').val();
+                d.status = savedFilters.status ?? $('#statusFilter').val(); 
+                d.start_date = savedFilters.start_date ?? $('#start-date-filter').val();
+                d.end_date = savedFilters.end_date ?? $('#end-date-filter').val();
             },
-
             dataSrc: function (json) {
-                json.recordsTotal = json.count;  // Set total records
-                json.recordsFiltered = json.count;  // Set filtered records count
-                return json.results;  // Extract data array from Django's paginated response
+                json.recordsTotal = json.count;
+                json.recordsFiltered = json.count;
+                return json.results;
             },
-
-            error: function(xhr, status, error) {
+            error: function(xhr) {
                 if (xhr.status === 401) {
-                    alert("Unauthorized! Please log in again.");
+                    showMessage("error", "Session expired. Please login again.");
                     window.location.href = "index.html";
                 }
             }
         },
         columns: [
-            { data: 'id', title: 'ID', searchable: false, visible: false },
-            { 
-                data: 'shorten_url', 
+            { data: 'id', title: 'ID', visible: false },
+            {
+                data: 'short_link',
                 title: 'Short Link',
-                render: function(data, type, row) {
-                    return `
-                        <div class="copy-container">
-                            <span class="short-link">${data}</span>
-                            <button class="copy-btn" onclick="copyToClipboard('${data}')">
-                                <i class="fas fa-copy"></i> 
-                            </button>
-                        </div>
-                    `;
+                render: function (data) {
+                    return `<div class="copy-container">
+                                <span class="short-link" data-link="${data}">${data}</span>
+                                <button class="copy-btn" data-link="${data}">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>`;
                 }
-                
             },
-            { data: 'origin_url', title: 'Original Link', },
+            {
+                data: 'original_link',
+                title: 'Original Link',
+                render: function (data) {
+                    return `<a href="${data}" target="_blank" class="org-link">${data}</a>`;
+                }
+            },
+
             {
                 data: null,
-                title: 'Qr Code',
+                title: 'QR Code',
                 createdCell: function (td, cellData, rowData, row, col) {
                     // Create a unique ID for the QR code container and modal
                     let qrId = `qr-${rowData.id}`;
                     let modalId = `qr-modal-${rowData.id}`;
-
-                    // Add QR code and modal structure (without close button)
+                    
+                    // Add QR code image and modal structure
                     $(td).html(`
-                        <div id="${qrId}" class="qr-container" style="cursor:pointer;"></div>
+                        <img src="../static/images/image 4.svg" id="${qrId}" class="qr-container" style="cursor:pointer; width: 60px; height: 55px;" alt="QR Code Placeholder">
                         
                         <!-- Hidden Modal for Enlarged QR -->
                         <div id="${modalId}" class="qr-modal" style="display:none; position:fixed; top:50%; left:50%;
@@ -142,328 +343,208 @@ $(document).ready(function () {
                             <div id="large-${qrId}"></div>
                         </div>
                     `);
-
-                    // Generate Small QR Code
-                    if (rowData.id && rowData.shorten_url) {
-                        setTimeout(() => {
-                            new QRCode(document.getElementById(qrId), {
-                                text: rowData.shorten_url,
-                                width: 60,
-                                height: 55
-                            });
-                        }, 10);
-                    } else {
-                        console.error("Error: Missing ID or Shortened URL", rowData);
-                    }
-
+            
                     // Add Click Event for Enlarging QR Code
                     $(td).find(`#${qrId}`).click(function (e) {
+                        let modal = $(`#${modalId}`);
+                        
+                        // QR kodni toza yaratish
                         let largeQRContainer = document.getElementById(`large-${qrId}`);
-                        largeQRContainer.innerHTML = ""; // Clear previous QR
+                        largeQRContainer.innerHTML = "";
                         new QRCode(largeQRContainer, {
-                            text: rowData.shorten_url,
+                            text: rowData.short_link,  // **short_link ni ishlatish**
                             width: 200,
                             height: 200
                         });
-
-                        // Show Modal
-                        $(`#${modalId}`).fadeIn();
-
-                        // Stop event from bubbling up (prevents immediate closing)
+                    
+                        $(".qr-modal-overlay").fadeIn();  // Yopish foni chiqadi
+                        modal.fadeIn();
                         e.stopPropagation();
                     });
-
+                    
+                    // Modalni yopish
+                    $(".qr-modal-overlay, .qr-modal").click(function (e) {
+                        if (!$(e.target).closest('.qr-modal img').length) {
+                            $(".qr-modal-overlay").fadeOut();
+                            $(".qr-modal").fadeOut();
+                        }
+                    });
+                    
+            
                     // Close Modal on Clicking Outside the QR Code
                     $(document).on("click", function (e) {
-                        // Check if clicked area is NOT inside the modal or small QR code
                         if (!$(e.target).closest(`.qr-modal, #${qrId}`).length) {
                             $(`#${modalId}`).fadeOut();
                         }
                     });
                 }
-
             },
 
+            {
+                data: 'clicks',
+                title: 'Clicks',
+                render: function (data) {
+                    return `<span class="click-count">${data}</span>`;
+                }
+            },
 
-            { data: 'clicks', title: 'Clicks', },
-
-            { 
-                data: 'status', 
+            {
+                data: 'status',
                 title: 'Status',
-                render: function(data, type, row) {
-                    if (data == 1) {
-                        return '<span style="color: green; font-weight: bold;">' +
-                            'Active <i class="fas fa-link"></i>' + 
-                            '</span>';
-                    } else {
-                        return '<span style="color: orange; font-weight: bold;">' +
-                            'Inactive <i class="fas fa-unlink"></i>' + 
-                            '</span>';
-                    }
+                render: function (data) {
+                    const isActive = String(data).toLowerCase() === "true" || data === true || data === 1;
+                    return `<span class="status ${isActive ? 'active' : 'inactive'}">
+                        ${isActive ? 'Active' : 'Inactive'} 
+                        <i class="fas fa-${isActive ? 'link' : 'unlink'}"></i>
+                    </span>`;
                 }
             },
-
-            { 
-                data: 'created_at', 
+            {
+                data: 'created_at',
                 title: 'Date',
-                render: function (data, type, row) {
-                    if (!data) return '';  
-                    var date = new Date(data);  
-                    var options = { month: 'short', day: '2-digit', year: 'numeric' };
-                    return date.toLocaleDateString('en-US', options).replace(',', '');
+                render: function (data) {
+                    return `<span class="text-white">${new Date(data).toLocaleDateString('en-US', { 
+                        month: 'short', 
+                        day: '2-digit', 
+                        year: 'numeric' 
+                    })}</span>`;
                 }
             },
-            
             {
                 data: null,
                 title: 'Actions',
                 orderable: false,
-                searchable: false,
-                className: 'text-center', // Center-align the buttons
                 render: function (data, type, row) {
-                    // Check if the user is soft-deleted
-                    const isDeleted = row.deleted_at !== null;
-
-                    // Return the HTML for the action buttons
-                    return `
-                <div class="d-flex text-center">
-
-                    <button class="btn btn-sm btn-warning edit-link " data-id="${row.id}">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="btn btn-sm btn-danger delete-link " data-id="${row.id}">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-                    `;
-                },
-            }
-        ],
-        columnDefs: [
-            { targets: 0, width: "4%" },
-            { targets: 1, width: "25%" },
-            { targets: 2, width: "35%" },
-            { targets: 3, width: "10%" },
-            { targets: 4, width: "6%" },
-            { targets: 5, width: "8%" },
-            { targets: 6, width: "10%" },
-            { targets: 7, width: "8%" }
-        ],
-        drawCallback: function(settings) {
-            let totalRecords = settings.json.recordsTotal;  
-            $('#count_link').text('History ' + '('+ totalRecords +')'); 
-        },
-    });
-
-
-
-
-    $("#filterBtn").click(function () {
-        let user = $('#userTable').DataTable();
-        user.ajax.reload(null, false); // false = Keep the current page
-        $.confirm({
-            title: 'Filter Data',
-            content: `
-                <div class="filter-container">
-                    <div class="filter-row">
-                        <label for="searchInput_short">Short Link:</label>
-                        <input type="text" id="searchInput_short" class="form-control" placeholder="Enter Short Link">
-                    </div>
-
-                    <div class="filter-row">
-                        <label>Date:</label>
-                        <div class="date-filter">
-                            <button id="fromDateBtn" class="btn btn-outline-primary">From</button>
-                            <input type="date" id="startDate" class="form-control">
-                            <button id="toDateBtn" class="btn btn-outline-primary">To</button>
-                            <input type="date" id="endDate" class="form-control">
-                        </div>
-                    </div>
-
-                    <div class="filter-row">
-                        <label for="statusFilter">Status:</label>
-                        <select id="statusFilter" class="form-control">
-                            <option value="">All</option>
-                            <option value="1">Active</option>
-                            <option value="0">Inactive</option>
-                        </select>
-                    </div>
-                </div>
-
-
-            `,
-            buttons: {
-                filter: {
-                    text: 'Apply',
-                    btnClass: 'btn-dark blue',
-                    action: function () {
-                        let user = $('#userTable').DataTable();
-                        user.ajax.reload();
-                    }
-                },
-                cancel: {
-                    text: 'Cancel',
-                    action: function () {
-                        // Just close the popup
-                    }
+                    return `<button class="action-btn delete-user" data-id="${row.id}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <button class="action-btn edit-status" data-id="${row.id}" data-status="${row.status}">
+                                <i class="fas fa-edit"></i>
+                            </button>`;
                 }
             }
-        });
+        ]
     });
 
-
-
-
-    //#######################------------DELETE AND EDIT ACTION------------
-
-    $(document).on('click', '.edit-link', function() {
-        // Get the row data using DataTables API
-        let table = $('#userTable').DataTable();
-        let row = $(this).closest('tr');
-        let rowData = table.row(row).data();
-
-        // Generate read-only inputs for all fields except status
-        var formHtml = `
-            <td><input type="text" value="${rowData.shorten_url}" readonly class="form-control"></td>
-            <td><input type="text" value="${rowData.origin_url}" readonly class="form-control"></td>
-            <td>
-                <div class="qr-readonly">
-                    <div id="qr-readonly-${rowData.id}" class="qr-container"></div>
-                </div>
-            </td>
-            <td><input type="number" value="${rowData.clicks}" readonly class="form-control"></td>
-            <td>
-                <select class="form-control" id="editStatus">
-                    <option value="1" ${rowData.status == 1 ? 'selected' : ''}>Active</option>
-                    <option value="0" ${rowData.status == 0 ? 'selected' : ''}>Inactive</option>
-                </select>
-            </td>
-            <td><input type="text" value="${rowData.created_at}" readonly class="form-control"></td>
-            <td>
-                <button class="btn btn-sm btn-success save-link" data-id="${rowData.id}">
-                    <i class="fas fa-save"></i>
-                </button>
-                <button class="btn btn-sm btn-secondary cancel-edit">
-                    <i class="fas fa-times"></i>
-                </button>
-            </td>
-        `;
-
-        // Replace the row content with the edit form
-        row.html(formHtml);
-        // Generate the QR Code when the row is in edit mode
-        setTimeout(() => {
-            let qrContainerId = `qr-readonly-${rowData.id}`;
-            let qrContainer = document.getElementById(qrContainerId);
-
-            // Clear existing QR code if any
-            qrContainer.innerHTML = "";
-
-            // Generate a new QR code
-            new QRCode(qrContainer, {
-                text: rowData.shorten_url,
-                width: 60,
-                height: 60
-            });
-        }, 10);
-
+    // ======================
+    // 7. FILTER FUNCTIONALITY
+    // ======================
+    let modal = $("#filter-modal");
+    $("#open-filter-modal").click(function () {
+        let savedFilters = JSON.parse(localStorage.getItem('globalFilters')) || {};
+        $("#short-link-filter").val(savedFilters.search_short || "");
+        $("#status-filter").val(savedFilters.status || "");
+        $("#start-date-filter").val(savedFilters.start_date || "");
+        $("#end-date-filter").val(savedFilters.end_date || "");
+        modal.show();
     });
 
+    $(".close").click(function () {
+        modal.hide();
+    });
 
-    $(document).on('click', '.save-link', function() {
-        let id = $(this).data('id');
-        let status = $('#editStatus').val();
-        let $button = $(this);
+    $(window).click(function (event) {
+        if ($(event.target).is(modal)) {
+            modal.hide();
+        }
+    });
 
-        // ✅ Validation: Check if status is valid
-        if (!status) {
-            alert("Please select a valid status.");
+    $("#apply-filter").click(function () {
+        let startDate = $("#start-date-filter").val();
+        let endDate = $("#end-date-filter").val();
+    
+        if (startDate && endDate && startDate > endDate) {
+            showMessage("error", "Start date cannot be greater than end date");
+            return;
+        }
+    
+        let filters = {
+            search_short: $("#short-link-filter").val().trim(),
+            status: $("#status-filter").val(),
+            start_date: startDate,
+            end_date: endDate
+        };
+    
+        localStorage.setItem('globalFilters', JSON.stringify(filters));
+        loadUserUrls();
+        showMessage("success", "Filters applied");
+        modal.hide();
+    });
+    
+    $("#clear-filter-btn").click(function () {
+        localStorage.removeItem('globalFilters');
+        $("#short-link-filter, #original-link-filter, #status-filter, #start-date-filter, #end-date-filter").val("");
+        loadUserUrls();
+        showMessage("success", "Filters cleared");
+        modal.hide();
+    });
+
+    // ======================
+    // 8. URL MANAGEMENT ACTIONS
+    // ======================
+    // Delete URL
+    $(document).on("click", ".delete-user", function () {
+        let urlId = $(this).data("id");
+        if (!urlId) {
+            showMessage("error", "ID not found!");
             return;
         }
 
-        // Disable button to prevent multiple submissions
-        $button.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Saving...');
-
-        $.ajax({
-            url: `http://127.0.0.1:8000/api/shorten/urls/${id}/`,
-            type: 'PUT',
-            headers: {
-                "Authorization": "Token " + token,
-                "Content-Type": "application/json"
-            },
-            data: JSON.stringify({ status: parseInt(status) }),
-
-            success: function() {
-                $('#userTable').DataTable().ajax.reload(); // Refresh DataTable
-                alert("Status updated successfully!");
-            },
-
-            error: function(xhr, status, error) {
-                let errorMessage = "Failed to update status";
-                
-                if (xhr.status === 400) {
-                    errorMessage = "Validation error: " + (xhr.responseJSON?.detail || "Invalid input");
-                } else if (xhr.status === 401) {
-                    errorMessage = "Unauthorized access. Please log in again.";
-                    window.location.href = "index.html"; // Redirect to login if unauthorized
-                } else if (xhr.status === 500) {
-                    errorMessage = "Server error. Please try again later.";
-                }
-
-                alert(errorMessage);
-            },
-
-            complete: function() {
-                $button.prop('disabled', false).html('<i class="fas fa-save"></i>'); // Re-enable button
-            }
-        });
-    });
-
-    $(document).on('click', '.cancel-edit', function () {
-        // Find the row being edited and revert it
-        let row = $(this).closest('tr');
-        let table = $('#userTable').DataTable();
-
-        // Redraw the row with the original data
-        let rowData = table.row(row).data();
-        table.row(row).data(rowData).draw(false);
-    });
-
-        // ------------------------------------------------------
-
-
-        // Handle Delete Button with SweetAlert2
-    $(document).on('click', '.delete-link', function () {
-        const id = $(this).data('id');  // Get the ID from the data attribute
-
         Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
+            title: "Are you sure?",
+            text: "This URL will be permanently deleted!",
+            icon: "warning",
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!',
-            cancelButtonText: 'Cancel'
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "Cancel"
         }).then((result) => {
             if (result.isConfirmed) {
-                // Perform the DELETE request if confirmed
                 $.ajax({
-                    url: `http://127.0.0.1:8000/api/shorten/urls/${id}/`,
-                    type: 'DELETE',
-                    headers: {
-                        "Authorization": "Token " + token
-                    },
+                    url: `${API_BASE_URL}/api/shorten/delete/${urlId}/`,
+                    method: "DELETE",
+                    headers: { "Authorization": "Token " + getAuthToken() },
                     success: function () {
-                        $('#userTable').DataTable().ajax.reload(); // Refresh DataTable
+                        showMessage("success", "URL successfully deleted.");
+                        loadUserUrls();
                     },
-                    error: function (xhr, status, error) {
-                        console.error('Failed to delete link:', error);
-                        Swal.fire(
-                            'Failed!',
-                            'Failed to delete link. Please try again.',
-                            'error'
-                        );
+                    error: function () {
+                        showMessage("error", "An error occurred while deleting!");
+                    }
+                });
+            }
+        });
+    });
+
+    // Update status
+    $(document).on("click", ".edit-status", function () {
+        let urlId = $(this).data("id");
+        let currentStatus = $(this).data("status"); 
+
+        Swal.fire({
+            title: "Update Status",
+            showCancelButton: true,
+            confirmButtonText: currentStatus ? "🔴 Deactivate" : "🟢 Activate",
+            showDenyButton: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const newStatus = currentStatus ? 0 : 1;  // Convert boolean to 0 or 1
+                
+                console.log("Updating status for ID:", urlId, "New Status:", newStatus); // Debugging
+
+                $.ajax({
+                    url: `${API_BASE_URL}/api/status/update/${urlId}/`,
+                    method: "PUT",
+                    contentType: "application/json",
+                    headers: { "Authorization": "Token " + getAuthToken() },
+                    data: JSON.stringify({ status: newStatus }),  // Send 0 or 1 instead of true/false
+                    success: function (response) {
+                        console.log("Success Response:", response); // Debugging
+                        showMessage("success", "Status successfully updated!");
+                        loadUserUrls();
+                    },
+                    error: function (xhr) {
+                        console.log("Error Response:", xhr.responseText); // Debugging
+                        showMessage("error", "An error occurred while updating!");
                     }
                 });
             }
@@ -471,231 +552,19 @@ $(document).ready(function () {
     });
 
 
-
-
-
-                
-            //###########################-----Input_url-------###################################
-        $("#btn_submit").click(function () {
-            let originalUrl = $("#url_input").val().trim(); 
-
-            if (originalUrl === "") {
-                Swal.fire("Error", "Please enter a URL!", "error");
-                return;
-            }
-
-            $.ajax({
-                url: "http://127.0.0.1:8000/api/shorten/", 
-                type: "POST",
-                headers: {
-                    "Authorization": "Token " + token
-                },
-                contentType: "application/json",
-                data: JSON.stringify({ origin_url: originalUrl }),
-                success: function (response) {
-                    // Swal.fire("Success", "URL successfully shortened!", "success");
-
-                    $("#url_input").val("");
-
-                    table.ajax.reload();
-                },
-                error: function (xhr) {
-                    Swal.fire("Error", "Failed to shorten URL: " + xhr.responseText, "error");
-                }
-            });
-        })
-
-
-
-            //-------------------------------------------------------OUTSIDE OF DATATABLE-----------------------------------------------------
-            //###########################-----LOGOUT---###################################################################
-            function logout() {
-                let token = localStorage.getItem("token");
-
-                if (!token) {
-                    window.location.href = "index.html";
-                    return;
-                }
-
-                $.ajax({
-                    url: "http://127.0.0.1:8000/api/logout/", 
-                    type: "POST",
-                    headers: {
-                        "Authorization": "Token " + token 
-                    },
-                    success: function() {
-                        localStorage.removeItem("token");
-                        window.location.href = "index.html";
-                    },
-                    error: function(xhr) {
-                        alert("Logout failed: " + xhr.responseText);
-                    }
-                });
-            }
-
-            //########################################################################################################## 
-
-            //##########################--------COPY-BUTTON-----------################################### 
-
-            $(document).ready(function () {
-                // Attach event listener to dynamically created buttons
-                $(document).on("click", ".copy-btn", function () {
-                    let text = $(this).siblings(".short-link").text().trim(); // Get the text inside .short-link
-            
-                    if (text) {
-                        copyToClipboard(text);
-                    } else {
-                        showToast("⚠️ No text found to copy!");
-                    }
-                });
-            });
-            
-            // Function to copy text to clipboard
-            function copyToClipboard(text) {
-                navigator.clipboard.writeText(text)
-                    .then(() => {
-                        showToast("✅ Copied: " + text);
-                    })
-                    .catch(err => {
-                        console.error("Failed to copy text:", err);
-                        showToast("❌ Copy failed!");
-                    });
-            }
-            
-            // Function to show a toast notification
-            function showToast(message) {
-                const toast = document.createElement("div");
-                toast.textContent = message;
-                toast.style.position = "fixed";
-                toast.style.bottom = "20px";
-                toast.style.right = "20px";
-                toast.style.backgroundColor = "#333";
-                toast.style.color = "#fff";
-                toast.style.padding = "10px 20px";
-                toast.style.borderRadius = "5px";
-                toast.style.zIndex = "1000";
-                toast.style.opacity = "0";
-                toast.style.transition = "opacity 0.5s";
-            
-                document.body.appendChild(toast);
-            
-                // Fade in the toast
-                setTimeout(() => {
-                    toast.style.opacity = "1";
-                }, 10);
-            
-                // Fade out and remove the toast after 3 seconds
-                setTimeout(() => {
-                    toast.style.opacity = "0";
-                    setTimeout(() => {
-                        document.body.removeChild(toast);
-                    }, 500);
-                }, 3000);
-            }
-            
-            
-})
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            // #########################################################################
-
-              // Swal.fire({
-                //     title: "Are you sure?",
-                //     text: "You will be logged out!",
-                //     icon: "warning",
-                //     showConfirmButton: false, // Hide default confirm button
-                    // html: `
-                    //     <button id="confirm-logout" class="swal2-confirm swal2-styled" style="background:#d33; margin-right:10px;">Logout</button>
-                    //     <button id="cancel-logout" class="swal2-cancel swal2-styled" style="background:#3085d6;">Cancel</button>
-                    // `,
-                    // customClass: {
-                    //     popup: "custom-swal-popup" // Apply a custom CSS class
-                    // },
-                    // allowOutsideClick: true,
-                    // allowEscapeKey: false,
-                    // didOpen: () => {
-                    //     // When the Swal modal opens, attach event listeners
-                    //     document.getElementById("confirm-logout").addEventListener("click", function () {
-                    //         // Send request to backend for logout
-                    //         $.ajax({
-                    //             url: "http://127.0.0.1:8000/api/logout/", // Adjust to your backend logout URL
-                    //             type: "POST",
-                    //             success: function () {
-                    //                 Swal.fire({
-                    //                     title: "Logged Out",
-                    //                     text: "You have been logged out successfully!",
-                    //                     icon: "success",
-                    //                     timer: 2000, // Auto-close after 2 seconds
-                    //                     showConfirmButton: false
-                    //                 }).then(() => {
-                    //                     window.location.href = "index.html"; // Redirect to homepage
-                    //                 });
-                    //             },
-                    //             error: function () {
-                    //                 Swal.fire("Error", "Something went wrong!", "error");
-                    //             }
-                    //         });
-                    //     });
-
-                    //     document.getElementById("cancel-logout").addEventListener("click", function () {
-                    //         Swal.close(); // Close the modal when Cancel is clicked
-                    //     });
-                    // }
-                // });
+    // Copy functionality
+    $(document).on("click", ".copy-btn, .short-link", function (event) {
+        event.preventDefault();
+        let link = $(this).data("link") || $(this).text();
+        navigator.clipboard.writeText(link).then(() => {
+            showToast("✅ Copied: " + link);
+        }).catch(() => {
+            showToast("⚠️ No text found to copy!");
+        });
+    });
+
+    // ======================
+    // 9. INITIALIZATION
+    // ======================
+    loadUserUrls();
+});

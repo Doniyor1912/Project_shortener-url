@@ -25,22 +25,33 @@
                     </h1>
                 </div>
 
-                <div>
+                <div class="btn_lang_div">
+                    
                     <div class="user-btns">
                         <button class="btn-login" id="login">
-                            <span data-i18n="login" class="login-text">Login</span>
+                            <span data-i18n="login1" class="login-text">Login</span>
                             <i class="fas fa-sign-in-alt login-icon"></i>
                         </button>
                         <button class="btn-register" id="register"> 
-                            <span data-i18n="register" class="register-text">Register</span>
+                            <span data-i18n="register1" class="register-text">Register</span>
                         </button>
                     </div>
-
-                    <select id="languageSwitcher">
-                        <option value="en">English</option>
-                        <option value="uz">Uzbek</option>
-                        <option value="ru">Russian</option>
-                    </select>
+                    
+                    <div class="language-container">
+                        <div class="dropdown">
+                            <button class="dropdown-btn">
+                                <img id="selected-flag" src="https://flagcdn.com/w40/gb.png" alt="Flag">
+                                <span id="selected-lang">English</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li data-lang="ru"><img src="https://flagcdn.com/w40/ru.png" alt="Русский"> Русский</li>
+                                <li data-lang="en"><img src="https://flagcdn.com/w40/gb.png" alt="English"> English</li>
+                                <li data-lang="uz"><img src="https://flagcdn.com/w40/uz.png" alt="Uzbek"> Uzbek</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
     
                 </div>
                     
@@ -62,7 +73,7 @@
                         <div class="input-container">
                             <span class="icon">🔗</span>
                             <input data-i18n="input_text" type="text" class="url-input" id="input_url" placeholder="Enter the link here">
-                            <button data-i18n="shortener_btn" class="shorten-btn" id="submit_btn">Shorten!</button>
+                            <button data-i18n="main.button.shorten" class="shorten-btn" id="submit_btn">Shorten!</button>
                         </div>
                     </div>
 
@@ -114,7 +125,7 @@
                     <tbody>
                         <tr>
                             <td>
-                                <span id="shortLink" style="font-size: 17px;">https://linkly.com/zT09B0</span>
+                                <span id="shortLink" style="font-size: 17px;">https://linkly.com/zT09BT</span>
                                 <button style="border-radius: 5px;" onclick="copyToClipboard()" class="btn btn-sm btn-outline-light">
                                     <i class="fas fa-copy"></i>
                                 </button>
@@ -150,7 +161,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <span id="shortLink" style="font-size: 17px;">https://linkly.com/tWF3dn</span>
+                                <span id="shortLink" style="font-size: 17px;">https://linkly.com/tSF3ep</span>
                                 <button onclick="copyToClipboard('shortLink')" class="btn btn-sm btn-outline-light">
                                     <i class="fas fa-copy"></i>
                                 </button>
@@ -168,7 +179,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <span id="shortLink" style="font-size: 17px;">https://linkly.com/bnqcOd</span>
+                                <span id="shortLink" style="font-size: 17px;">https://linkly.com/bofc1d</span>
                                 <button onclick="copyToClipboard('shortLink')" class="btn btn-sm btn-outline-light">
                                     <i class="fas fa-copy"></i>
                                 </button>
@@ -186,7 +197,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <span id="shortLink" style="font-size: 17px;">https://linkly.com/cO3dnq</span>
+                                <span id="shortLink" style="font-size: 17px;">https://linkly.com/cod2q1</span>
                                 <button onclick="copyToClipboard('shortLink')" class="btn btn-sm btn-outline-light">
                                     <i class="fas fa-copy"></i>
                                 </button>

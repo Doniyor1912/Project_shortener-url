@@ -1,0 +1,579 @@
+
+body {
+    background-image: url("../images/main_foto.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-color: #0d0f1a;
+    width: 1600px;
+    color: white;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Header */
+
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    background-color: #0f172a;
+    width: 1600px;
+    height: 140px;
+    margin-bottom: 10px;
+    padding: 15px 40px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin: auto auto 20px auto;
+}
+
+
+ .logo {
+    height: 46px;
+    /* margin-left: 40px; */
+} 
+/*------------------------INPUT---------------------  */
+.input-wrapper {
+    display: flex;
+    justify-content: center;
+}
+.input-container {
+    display: flex;
+    align-items: center;
+    background: #1C1F2E;
+    padding: 7px;
+    border-radius: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 600px;
+    box-shadow: 0 0 8px rgba(0, 102, 255, 0.5);
+}
+.url-input {
+    flex: 1;
+    padding: 5px 5px 5px 10px;
+    background: transparent;
+    border: none;
+    color: #C9CED6;
+    outline: none;
+}
+.shorten-btn {
+    background: #0066ff;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 18px;
+    cursor: pointer;
+    font-size: 18px;
+    height: 55px;
+    width: 105px;
+}
+.shorten-btn:hover {
+    background: #004bcc;
+}
+
+
+
+
+.profile-container {
+    display: flex;
+    justify-content: center;
+}
+.btn-profile {
+    align-items: center;
+    background: #00163f;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+    gap: 10px;
+}
+.btn-profile:hover {
+    background-color: #333333;
+    color: #007bff;
+}  
+
+
+/*------------------------------------DROPDOWN----------- */
+
+/* Profile qismi */
+.profile-container {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    margin-right: 40px;
+    width: 170px ;
+    height: 50px;
+}
+.profile-btn{
+    width: 120px;
+    display: flex;
+    align-items: center;
+    background: #00163f;
+    color: white;
+    padding: 5px 8px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 300;
+    transition: 0.3s;
+    gap: 10px;
+    cursor: pointer;
+}
+.profile-btn:hover {
+    background-color: #333333;
+    color: #007bff;
+}
+
+/* Drop-down menyu */
+.profile-dropdown {
+    display: none;
+    position: absolute;
+    top: 33px;
+    right: 0;
+    padding-right: 5px;
+    background: #0d0f1a;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 140px;
+    z-index: 1000;
+    margin-top: 18px; /* Tugmadan biroz pastroqqa tushiramiz */
+    overflow: hidden;
+    /* margin-right: 30px; */
+}
+
+.profile-dropdown a, .profile-dropdown button {
+    display: block;
+    width: 100%;
+    padding: 12px 15px;
+    text-align: left;
+    text-decoration: none;
+    color: #ffff;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 200px;
+}
+.profile-dropdown a:hover, .profile-dropdown button:hover {
+    background: #2A2E3F;
+}
+
+/* Drop-down faollashtirish */
+.profile-container.active .profile-dropdown {
+    display: block;
+}
+
+
+.logout-text{
+    font-weight: bold;
+    color: red !important;
+}
+
+
+/* Welcome User text */
+.welcome-tooltip {
+    position: absolute;
+    right: 0;
+    background: #00163f;
+    color: white;
+    width: 110px;  
+    height: 40px;  
+    padding: 15px;
+    border-radius: 50px; 
+    font-size: 18px;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 30px; 
+}
+
+
+.welcome-tooltip:hover {
+    background-color: #333333;
+    color: #007bff;
+}
+
+
+#arrowIcon {
+    transition: transform 0.3s ease-in-out;
+}
+.rotate-up {
+    transform: rotate(180deg);
+}
+
+
+
+
+
+/*------------------------------------logout -----------------*/
+.custom-swal-popup {
+    background: #0d0f1a !important;
+    color: white !important;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Style for the Logout button */
+.swal-confirm-btn {
+    background-color: #d9534f !important;
+    color: white !important;
+    border: none;
+}
+
+/* Style for the Cancel button */
+.swal-cancel-btn {
+    background-color: #6c757d !important;
+    color: white !important;
+    border: none;
+}
+
+
+
+
+/*----------------------------------Navigation Tabs-------- */
+
+.nav-tabs {
+    display: flex;
+    justify-content: center;
+    background-color:#0d0f1a;
+    padding: 15px 0;
+    margin: 20px auto auto auto;
+}
+
+.tabs {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+    padding: 0;
+}
+
+.tabs a {
+    text-decoration: none;
+}
+
+.tabs li {
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: white;  
+    position: relative; /* For underline */
+    transition: color 0.3s ease;
+}
+
+.tabs li i {
+    transition: color 0.3s ease;
+}
+
+
+.tabs li {
+    display: inline-block;
+    padding: 10px 15px;
+    cursor: pointer;
+    position: relative;
+}
+
+.tabs li:hover::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -3px; /* Adjust this to control underline position */
+    width: 100%;
+    height: 2px; /* Thickness of underline */
+    background-color: white; /* Change to match your theme */
+    
+}
+
+/* Table */
+
+.table-container {
+    width: 1300px;
+    margin: 20px auto;
+    border-radius: 10px;
+    /* border: 2px solid rgba(30, 103, 230, .2); */
+    display: flex;
+    justify-content: center;
+    position: relative;
+    /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
+}
+
+
+#userTable {
+    width: 100%;
+    table-layout: fixed;
+    border: 1px solid #0d0f1a;
+}
+#userTable th, #userTable td{
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+
+thead {
+    background-color: #0f172a;
+}
+
+tbody {
+    background-color: #1e293b;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #334155;
+}
+
+.status.active { color: #059669; font-weight: bold; }
+.status.inactive { color: #b91c1c; font-weight: bold; }
+.action-btn { background: none; border: none; cursor: pointer; color: white; }
+.action-btn.edit { color: #3b82f6; }
+.action-btn.delete { color: #b91c1c; }
+
+
+
+/* Filter tugmasi */
+.filter-btn {
+    padding: 10px 20px;
+    background: #0276f1;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: bold;
+    
+    /* O'ng tomonga joylash */
+    position: absolute;
+    right: 125px;
+    top: 270px;
+    margin-top: 10px;
+}
+
+.filter-btn:hover {
+    background: #0056b3;
+}
+
+
+
+
+/* --------------------COPY BUTTON------------------ */
+
+.copy-container {
+    display: flex;
+    align-items: center;  /* Align items vertically */
+    gap: 5px; /* Space between link and button */
+    max-width: 100%; /* Allow full width */
+    white-space: nowrap; /* Prevent text from wrapping */
+}
+
+.short-link {
+    white-space: nowrap; /* Prevents text from wrapping */
+    overflow: hidden;
+    text-overflow: clip; /* Show full text */
+    flex-grow: 1; /* Takes available space */
+    min-width: max-content; /* Allows full length */
+}
+
+.copy-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px; /* Set width for uniformity */
+    height: 30px;
+    padding: 3px;
+    border: 1px solid #ffff;
+    background: #0f172a;
+    cursor: pointer;
+    color: white;
+}
+
+
+
+.copy-btn:hover {
+    background-color: #fff;
+    color: black;
+}
+
+/* actions buttons */
+
+.edit-link, .delete-link{
+    width: 40px !important;
+    height: 30px !important;
+}
+
+
+/* edit and cancel buttons */
+
+.save-link, .cancel-edit{
+    width: 37px;
+    height: 33px;
+}
+
+/* action inside save and cancel buttons */
+
+.delete-link {
+
+    /* padding: 2px 6px; */
+    font-size: 10px;
+    min-width: 30px;
+    height: 24px;
+    /* line-height: 1; */
+}
+
+.edit-link {
+    font-size: 10px;
+    min-width: 40px;
+    height: 24px;
+    margin-right: 3px;
+    text-align: center;
+}
+
+
+
+
+        /* Custom SweetAlert2 Popup */
+.custom-swal-popup {
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    font-family: 'Arial', sans-serif;
+}
+
+/* Custom Confirm Button */
+.custom-swal-confirm-btn {
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 14px;
+    color: white;
+}
+
+.custom-swal-confirm-btn:hover {
+    background-color: #45a049;
+}
+
+/* Custom Cancel Button */
+.custom-swal-cancel-btn {
+    background-color: #f44336;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 14px;
+    color: white;
+}
+
+.custom-swal-cancel-btn:hover {
+    background-color: #4d4343;
+}
+
+
+
+/* filter design */
+
+.jconfirm-box {
+    background-color: #0f172a !important;
+    color: white !important;
+    border-radius: 10px;
+    width: 600px;
+    overflow: hidden !important;
+}
+
+.jconfirm-title {
+    color: white !important;
+}
+
+.jconfirm-content {
+    color: white !important;
+    overflow: hidden !important;
+}
+
+.jconfirm-buttons {
+    text-align: right;
+}
+
+.filter-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 550px;
+    padding: 15px;
+    border-radius: 8px;
+    color: rgb(36, 34, 34);
+}
+
+.filter-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+label {
+    font-weight: 600;
+    min-width: 80px;
+    color: rgb(233, 225, 225);
+}
+input, select {
+    flex: 1;
+    padding: 6px;
+    border-radius: 5px;
+    border: 1px solid #555;
+    background: #2a2a2a;
+    color: white;
+}
+
+.date-filter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+button {
+    padding: 3px 6px;
+    border-radius: 5px;
+
+    border: none;
+    cursor: pointer;
+}
+
+.btn-outline-primary {
+    background: #0d6efd;
+    color: #ffff;
+    border: 1px solid #0d6efd;
+    /* width: 50px;
+    height: 40px; */
+    
+}
+
+.btn-outline-primary:hover {
+    background: none;
+    color: white;
+}
+
+
+.filter-container .filter-row input {
+    width: 200px !important;
+    height: 40px !important;
+    padding: 5px;
+    font-size: 14px;
+}
+
+.filter-container .date-filter input {
+    width: 150px !important;
+    padding: 5px;
+    font-size: 14px;
+}
+
+#statusFilter {
+    width: 150px !important;
+    max-width: 180px;
+    height: 35px;
+    font-size: 14px;
+    padding: 5px;
+}

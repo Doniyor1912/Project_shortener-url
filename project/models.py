@@ -1,37 +1,35 @@
 import random
 import string
-
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 from config.settings import Length
 
-
-class Shortened_db(models.Model):
-    shorten_url = models.CharField(max_length=20, unique=True)
-    origin_url = models.URLField(max_length=500)
+class ShortenedURL(models.Model):
+    short_link = models.CharField(max_length=20, unique=True)
+    original_link = models.URLField(max_length=500)
     clicks = models.IntegerField(default=0)
     status = models.PositiveIntegerField(default=1)
-    created_at = models.DateTimeField(default=timezone.now)
-    last_accessed = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
 
-    def __str__(self):
-        return f"{self.origin_url} -> {self.shorten_url}"
 
     def generate_short_url(self):
         characters = string.ascii_letters + string.digits
         while True:
-            shorten_url = ''.join(random.choices(characters, k=Length))
-            if not Shortened_db.objects.filter(shorten_url=shorten_url).exists():
-                return shorten_url
+            short_link = ''.join(random.choices(characters, k=Length))
+            if not ShortenedURL.objects.filter(short_link=short_link).exists():
+                return short_link
 
     def save(self, *args, **kwargs):
-        if not self.shorten_url:
-            self.shorten_url = self.generate_short_url()
+        if not self.short_link:
+            self.short_link = self.generate_short_url()
         super().save(*args, **kwargs)
 
-    def check_status(self):
-        if self.last_accessed and (timezone.now() - self.last_accessed).days > 7:
-            self.status = 0
-            self.save()
+    # for ordering by date:
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        user_info = f"by {self.user.username}" if self.user else "by Anonymous"
+        return f"{self.short_link} -> {self.original_link} ({user_info})"

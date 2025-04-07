@@ -1,10 +1,11 @@
 {
-    "login": "Kirish",
-    "register": "Ro'yxatdan o'tish",
+    "login1": "Kirish",
+    "register1": "Ro'yxatdan o'tish",
     "welcome": "Uzun Havolalarni Qisqartiring :)",
     "welcome_text": "Qisqa — bu tezkor va qulay URL qisqartirish xizmati. Bir marta sinab ko'ring, farqni his qiling!",
     "input_text": "Bu yerga havolani kiriting",
-    "short-url_title": "Qisqa URL manzilingiz tayyor!",
+    "shortener_btn": "Qisqartirish!",
+    "short-url_title": "Qisqa havola manzilingiz tayyor!",
     "short-url_text": "Ochish uchun havolani bosing yoki osongina almashish uchun tugmalardan foydalaning!",
     "datatable_title":"Siz ko'proq havolalar yaratishingiz mumkin. Cheksiz foydalanish uchun hozir ro'yxatdan o'ting",
     "data_short":"Qisqa havola",
@@ -14,6 +15,57 @@
     "data_status":"Status",
     "data_date":"Sana",
     "last_register": "Hozir roʻyxatdan oʻting",
-    "last_register-text": "Cheksiz tarixdan bahramand bo'lish"
+    "last_register-text": "Cheksiz tarixdan bahramand bo'lish",
+
+
+    
+    "login_title":"Kirish!",  
+    "login_username":"Foydalanuvchi nomi",  
+    "login_password":"Parol",  
+    "login_register_link":"Hisobingiz yoʻqmi? Roʻyxatdan oʻtish",  
+    "login_submit":"Kirish",  
+    "login_cancel":"Bekor qilish",
+
+
+
+    "register_title":"Ro'yxatdan o'tish!",
+    "register_username":"Foydalanuvchi nomi",
+    "email_password":"Elektron pochta",
+    "register_password":"Parol",
+    "register_confirm_password":"Parolni tasdiqlang",
+    "register_register_link":"Hisobingiz yo'qmi? Kirish",
+
+
+
+
+    "main_input_placeholder": "Havolani shu yerga kiriting",
+    "main_button_shorten": "Qisqartirish!",
+    "main_short_url_title": "Qisqartirilgan havola tayyor!",
+    "main_welcome": "Xush kelibsiz!",
+    "main_profile_view": "Profilni ko'rish",
+    "main_profile_logout": "Chiqish",
+    "main_filter_button": "Filtr",
+    "main_filter_title": "Filtrlash parametrlari",
+    "main_filter_short_link": "Qisqa havola:",
+    "main_filter_short_link_placeholder": "Qisqa havola bo'yicha qidirish",
+    "main_filter_status": "Holat:",
+    "main_filter_status_all": "Barcha holatlar",
+    "main_filter_status_active": "Faol",
+    "main_filter_status_inactive": "Nofaol",
+    "main_filter_start_date": "Boshlanish sanasi:",
+    "main_filter_end_date": "Tugash sanasi:",
+    "main_filter_apply": "Filtrlash",
+    "main_filter_clear": "Filtrlarni tozalash",
+    "main_history_title": "Tarix ({count})",
+    "main_table_history": "Tarix",
+    "main_table_short_link": "Qisqa havola",
+    "main_table_original_link": "Asl havola",
+    "main_table_clicks": "Bosishlar",
+    "main_table_qr_code": "QR kod",
+    "main_table_status": "Holat",
+    "main_table_date": "Sana",
+    "main_table_actions": "Harakatlar"
+
+
   }
   

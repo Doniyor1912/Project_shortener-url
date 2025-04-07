@@ -17,7 +17,7 @@ def format_url(origin_url):
         if origin_url.endswith(".com"):
             return "http://" + origin_url
         else:
-            return "https://" + origin_url
+            return f"https://{origin_url}.com"
     return origin_url
 
 class ShortenURLView(APIView):

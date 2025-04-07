@@ -1,11 +1,13 @@
-from rest_framework import generics, status
+from django.contrib.auth.models import User
+from rest_framework import generics, status, mixins
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import login
-from .serializers import RegistrationSerializer, LoginSerializer
-from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.viewsets import GenericViewSet
+
+from .serializers import RegistrationSerializer, LoginSerializer, UserProfileSerializer
+from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.authentication import TokenAuthentication
 
 
 class RegisterView(generics.CreateAPIView):
@@ -37,7 +39,7 @@ class LoginView(generics.CreateAPIView):
         token, created = Token.objects.get_or_create(user=user)
 
         return Response(
-            {"status":True, "message": "Login successful.", "auth_token": token.key},
+            {"status":True, "message": "Login successful.", "token": token.key},
             status=status.HTTP_200_OK
         )
 
@@ -53,3 +55,17 @@ class LogoutView(APIView):
         request.user.auth_token.delete()
         return Response({"message": "Logout successful."}, status=status.HTTP_200_OK)
 
+
+
+# Get user's Profile:
+class UserProfileView(mixins.UpdateModelMixin,
+                      mixins.RetrieveModelMixin,
+                      GenericViewSet):
+    serializer_class = UserProfileSerializer
+    permission_classes = [IsAuthenticated]  # Faqat kirgan foydalanuvchilar uchun
+
+    def get_queryset(self):
+        return User.objects.filter(id=self.request.user.id)  # Faqat login qilgan foydalanuvchini oladi
+
+    def get_object(self):
+        return self.request.user  # Foydalanuvchini bevosita qaytarish

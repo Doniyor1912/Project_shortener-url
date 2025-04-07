@@ -1,30 +1,134 @@
-$(document).ready(function () {
-    function changeLanguage(lang) {
-        $.getJSON(`./locales/${lang}.json`, function (translations) {
-            $("[data-i18n]").each(function () {
-                let key = $(this).attr("data-i18n");
+$(document).ready(function() {
+    const flagMap = {
+        "en": { img: "https://flagcdn.com/w40/gb.png", name: "English" },
+        "uz": { img: "https://flagcdn.com/w40/uz.png", name: "Uzbek" },
+        "ru": { img: "https://flagcdn.com/w40/ru.png", name: "Русский" }
+    };
 
-                // Check if it's an input field (update placeholder)
-                if ($(this).is("input, textarea")) {
-                    $(this).attr("placeholder", translations[key]);
+    // Store translations globally
+    let currentTranslations = {};
+    let currentLanguage = localStorage.getItem("lang") || "en";
+
+    // Function to update all translations on page
+    function applyTranslations() {
+        $("[data-i18n]").each(function() {
+            const key = $(this).data("i18n");
+            const translation = getTranslation(key);
+            
+            if (!translation) return;
+
+            // Handle different element types
+            if ($(this).is("input, textarea")) {
+                if ($(this).attr("type") === "button" || $(this).attr("type") === "submit") {
+                    $(this).val(translation);
                 } else {
-                    $(this).text(translations[key]);
+                    $(this).attr("placeholder", translation);
                 }
-            });
+            } else if ($(this).is("button")) {
+                // Preserve any HTML inside buttons (like icons)
+                if ($(this).children().length > 0) {
+                    $(this).contents().filter(function() {
+                        return this.nodeType === 3; // Text nodes only
+                    }).replaceWith(translation);
+                } else {
+                    $(this).text(translation);
+                }
+            } else {
+                $(this).text(translation);
+            }
+        });
+        
+        // Update dynamic content
+        updateDynamicContent();
+    }
+
+    // Helper function to get nested translations
+    function getTranslation(key) {
+        try {
+            const keys = key.split('.');
+            let result = currentTranslations;
+            
+            for (const k of keys) {
+                if (!result.hasOwnProperty(k)) {
+                    console.warn(`Missing translation for key: ${key}`);
+                    return null;
+                }
+                result = result[k];
+            }
+            return result;
+        } catch (e) {
+            console.error(`Error getting translation for ${key}:`, e);
+            return null;
+        }
+    }
+
+    // Update dynamic content like counts
+    function updateDynamicContent() {
+        // Update history count
+        const count = $('#url-table-body tr').length || 0;
+        const historyText = getTranslation('main.history.title')?.replace('{count}', count) || `History (${count})`;
+        $('#history-count').text(historyText);
+        
+        // Update login modal if open
+        updateModalTranslations();
+    }
+
+    // Function to update modal translations
+    function updateModalTranslations() {
+        if ($(".login-modal").length) {
+            const t = currentTranslations.login || {};
+            $(".login-modal h2").text(t.title || "Login!");
+            $(".login-modal #username").attr("placeholder", t.username || "Username");
+            $(".login-modal #password").attr("placeholder", t.password || "Password");
+            $(".login-modal .register-link").text(t.register_link || "Don't have an account? Register");
+            $("#submitLogin").text(t.submit || "Login");
+            $("#submitLogout").text(t.cancel || "Cancel");
+        }
+    }
+
+    // Function to change language
+    function changeLanguage(lang) {
+        $.getJSON(`./locales/${lang}.json`, function(translations) {
+            currentTranslations = translations;
+            currentLanguage = lang;
+            
+            // Update UI elements
+            $("#selected-flag").attr("src", flagMap[lang].img);
+            $("#selected-lang").text(flagMap[lang].name);
+            localStorage.setItem("lang", lang);
+            
+            // Apply translations
+            applyTranslations();
+        }).fail(function() {
+            console.error("Failed to load language file");
+            if (lang !== "en") changeLanguage("en");
         });
     }
 
-    // Detect user's preferred language
-    let userLang = localStorage.getItem("lang") || "en";
-    $("#languageSwitcher").val(userLang);
-    changeLanguage(userLang);
-
-    // Change language on dropdown select
-    $("#languageSwitcher").on("change", function () {
-        let selectedLang = $(this).val();
-        localStorage.setItem("lang", selectedLang);
-        changeLanguage(selectedLang);
+    // Initialize
+    changeLanguage(currentLanguage);
+    
+    // Language selector handlers
+    $(".dropdown-btn").click(function() {
+        $(".dropdown-menu").toggle();
     });
+
+    $(".dropdown-menu li").click(function() {
+        const selectedLang = $(this).data("lang");
+        changeLanguage(selectedLang);
+        $(".dropdown-menu").hide();
+    });
+
+    $(document).click(function(e) {
+        if (!$(e.target).closest(".dropdown").length) {
+            $(".dropdown-menu").hide();
+        }
+    });
+
+    // Make functions available globally
+    window.changeLanguage = changeLanguage;
+    window.applyTranslations = applyTranslations;
+    window.updateDynamicContent = updateDynamicContent;
 });
 
 
@@ -48,163 +152,151 @@ $(document).ready(function () {
 
     // Login
     $("#login").click(function () {
-        $.confirm({
-            title: 'Login!',
-            backgroundDismiss: true,
-            content: `
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-12">
-                            <form id="loginForm" class="login-modal">
-                                <div class="form-group">
-                                    <label class="form-label">Username</label>
-                                    <input type="text" class="form-control" id="username" placeholder="Enter username">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Password</label>
-                                    <input type="password" class="form-control" id="password" placeholder="Enter password">
-                                </div>
-                                <div class="form-check">
-                                    <a href="#" class="forgot-password">Forgot password?</a>
-                                </div>
-                            </form>
-                            <div class="sign-up">
-                                <p class="p-confirm mb-0">Don't have an account? <a href="register.html" class="text-primary">Sign up now</a></p>
-                            </div>
-                        </div>
+        // Create modal HTML
+        const modalHTML = `
+        <div class="login-modal">
+            <div class="login-container">
+                <h2 data-i18n="login_title">Login!</h2>
+                <form id="loginForm">
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input id="username" type="text" name="username" data-i18n="[placeholder]login_username" placeholder="Username" required>
+                        <i class="fas fa-times clear-icon" id="clearUsername"></i>
                     </div>
+                </form>
+    
+                <form id="loginForm1">
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input id="password" type="password" name="password" data-i18n="[placeholder]login_password" placeholder="Password" required>
+                        <i class="fas fa-eye-slash" id="togglePassword"></i>
+                    </div>
+                </form>
+    
+                <a href="register.html" class="register-link" data-i18n="login_register_link">Don't have an account? Register</a>
+    
+                <div class="last_btn_confirm">
+                    <button type="submit" id="submitLogin" class="btn-login2" data-i18n="login_submit">Login</button>
+                    <button type="submit" id="submitLogout" class="btn-login3" data-i18n="logincancel">Cancel</button>
                 </div>
-            `,
-            useBootstrap: false,
+            </div>
+        </div>
+        `;
+    
+        // Show modal using Swal (SweetAlert2)
+        Swal.fire({
+            html: modalHTML,
+            showConfirmButton: false,
+            showCancelButton: false,
+            allowOutsideClick: true,
+            width: '700px',
+            background: 'transparent',
+
+            willOpen: () => {
+                // Initialize password toggle
+                $("#togglePassword").click(function() {
+                    const passwordField = $("#password");
+                    const icon = $(this);
+                    if (passwordField.attr("type") === "password") {
+                        passwordField.attr("type", "text");
+                        icon.removeClass("fa-eye-slash").addClass("fa-eye");
+                    } else {
+                        passwordField.attr("type", "password");
+                        icon.removeClass("fa-eye").addClass("fa-eye-slash");
+                    }
+                });
+    
+                // Initialize clear icon
+                $("#clearUsername").click(function() {
+                    $("#username").val("").focus();
+                });
+
+                // Cancel button (FIXED)
+                $("#submitLogout").click(function() {
+                    Swal.close();
+                });
+            }
+        });
+    
+        // Handle form submission
+        $("#submitLogin").on("click", function(e) {
+            e.preventDefault();
             
-            onOpenBefore: function () {
-                // z-index
-                this.$el.css("z-index", "1050"); 
-                // title-color change
-                this.$title.css("color", "white");
-
-                // Change input style on focus
-                $(".form-control").on("focus", function () {
-                    $(this).css({
-                        'color': "#444",
-                        "background": "#fff", 
-                    });
+            let username = $("#username").val();
+            let password = $("#password").val();
+    
+            // Validation
+            if (!username || !password) {
+                Swal.fire({
+                    icon: "warning",
+                    title: 'Warning!',
+                    text: "Please enter your username and password!",
+                    confirmButtonColor: "#ffc107",
+                    confirmButtonText: "OK"
                 });
-
-                // Reset style on blur
-                $(".form-control").on("blur", function () {
-                    $(this).css({
-                        'color':'#fff',
-                        "background": "#444",   
-                    });
-                });
-
-                $('p').addClass('form-label')
-                $('.text-primary').css('text-decoration',"none")
-            },
-            buttons: {
-                login: {
-                    text: "Log In",
-                    btnClass: "btn-primary",
-                    action: function () {
-                        let username = $("#username").val();
-                        let password = $("#password").val();
-
-                        // 🔹 Bo‘sh maydonlar uchun validatsiya
-                        if (!username || !password) {
-                            Swal.fire({
-                                icon: "warning",
-                                title: 'Warning!',
-                                text: "Please enter your username and password!",
-                                confirmButtonColor: "#ffc107",
-                                confirmButtonText: "OK"
-                            });
-                            return;
-                        }
-
+                return;
+            }
+    
+            Swal.fire({
+                title: "⏳ Please wait...",
+                text: "Logging in",
+                allowOutsideClick: false,
+                didOpen: () => Swal.showLoading(),
+                timer: 2000
+            });
+    
+            $.ajax({
+                url: "http://127.0.0.1:8000/api/login/",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ username: username, password: password }),
+                success: function (response) {
+                    if (response.token) {
+                        localStorage.setItem("token", response.token);
+                        localStorage.setItem("username", username);
+                    }
+                    alert("you loggin")
+    
+                    if (response.status === true || response.success) {
+                        Swal.close();
+                        window.location.href = './main.html';
+                    } else {
                         Swal.fire({
-                        title: "⏳ Iltimos, kuting...",
-                        text: "Login amalga oshirilmoqda",
-                        allowOutsideClick: false,
-                        didOpen: () => Swal.showLoading(),
-                        timer: 2000
+                            title: 'Error!',
+                            text: response.message || "Unexpected response",
+                            icon: 'error'
                         });
-
-                        $.ajax({
-                            url: "http://127.0.0.1:8000/api/login/",
-                            type: "POST",
-                            contentType: "application/json",
-                            data: JSON.stringify({  username: username, password: password }),
-                            success: function (response) {
-                                if (response.auth_token) {
-                                    localStorage.setItem("token", response.auth_token);
-                                    localStorage.setItem("username", username);
-                                }
-
-                                $(".jconfirm").fadeOut(200, function () {
-                                    $(this).remove();
-                                });
-
-                                if (response.status === true || response.success) {
-                                    // Swal.fire({
-                                    //     title: 'Success!',
-                                    //     text: 'Login successful',
-                                    //     icon: 'success',
-                                    //     didOpen: () => {
-                                    //         $(".swal2-container").css("z-index", "9999"); 
-                                    //     }
-                                    // }).then(() => {
-                                    window.location.href = './main.html';
-                                    // });
-                                } else {
-                                    Swal.fire({
-                                        title: 'Error!',
-                                        text: response.message || "Unexpected response",
-                                        icon: 'error'
-                                    });
-                                }
-                            },
-                            error: function(xhr) {
-                                let errorMessage = "Something went wrong!";
-                                if (xhr.responseJSON) {
-                                    if (xhr.responseJSON.detail) {
-                                        // Case 1: Standard Django error (Authentication, Permission errors)
-                                        errorMessage = xhr.responseJSON.detail;
-                                    } else if (xhr.responseJSON.error) {
-                                        // Case 2: Custom error responses with "error" key
-                                        errorMessage = xhr.responseJSON.error;
-                                    } else if (xhr.responseJSON.non_field_errors) {
-                                        // Case 3: Django DRF validation errors (e.g., incorrect credentials)
-                                        errorMessage = xhr.responseJSON.non_field_errors.join(", ");
-                                    } 
-                                } 
-                                else if (xhr.responseText) {
-                                    // Case 5: Handle plain text responses (non-JSON errors)
-                                    errorMessage = xhr.responseText;
-                                };
-
-        
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: errorMessage,
-                                    icon: 'error'
-                                });
-                            },
-                        });
-
-                        return false; // Prevents modal from closing automatically
-                    },
+                    }
                 },
-                cancel: {
-                    text: "Cancel",
-                    action: function () {
-                        // Do nothing, just close
-                    },
+                error: function(xhr) {
+                    let errorMessage = "Something went wrong!";
+                    if (xhr.responseJSON) {
+                        if (xhr.responseJSON.detail) {
+                            errorMessage = xhr.responseJSON.detail;
+                        } else if (xhr.responseJSON.error) {
+                            errorMessage = xhr.responseJSON.error;
+                        } else if (xhr.responseJSON.non_field_errors) {
+                            errorMessage = xhr.responseJSON.non_field_errors.join(", ");
+                        } 
+                    } 
+                    else if (xhr.responseText) {
+                        errorMessage = xhr.responseText;
+                    };
+    
+                    Swal.fire({
+                        title: 'Error!',
+                        text: errorMessage,
+                        icon: 'error'
+                    });
                 },
-            },
-            
+            });
         });
     });
+
+    $("#submitLogout").click(function() {
+        Swal.close(); // Close the active SweetAlert popup
+    });
+
 
 
     $(document).ready(function() {
@@ -322,54 +414,54 @@ $(document).ready(function () {
 
 
 
-//         $(document).ready(function () {
-//             $('#shortenButton').on('click', function () {
-//                 const originUrl = $('#originUrlInput').val();
+    //     $(document).ready(function () {
+    //         $('#shortenButton').on('click', function () {
+    //             const originUrl = $('#originUrlInput').val();
         
-//                 $.ajax({
-//                     url: 'http://127.0.0.1:8000/api/shorten-url/',
-//                     type: 'POST',
-//                     contentType: 'application/json',
-//                     data: JSON.stringify({ origin_url: originUrl }),
-//                     success: function (response) {
-//                         $('#shortUrlDisplay').html(`
-//                             <a href="${response.short_url}" target="_blank">${response.short_url}</a>
-//                         `);
-//                     },
-//                     error: function () {
-//                         alert('Failed to shorten URL');
-//                     }
-//                 });
-//             });
-//         });
+    //             $.ajax({
+    //                 url: 'http://127.0.0.1:8000/api/shorten-url/',
+    //                 type: 'POST',
+    //                 contentType: 'application/json',
+    //                 data: JSON.stringify({ origin_url: originUrl }),
+    //                 success: function (response) {
+    //                     $('#shortUrlDisplay').html(`
+    //                         <a href="${response.short_url}" target="_blank">${response.short_url}</a>
+    //                     `);
+    //                 },
+    //                 error: function () {
+    //                     alert('Failed to shorten URL');
+    //                 }
+    //             });
+    //         });
+    //     });
         
         
-//       // Input_url
-//         $("#submit_btn").click(function () {
-//         let originalUrl = $("#input_url").val().trim(); 
+    //   // Input_url
+    //     $("#submit_btn").click(function () {
+    //     let originalUrl = $("#input_url").val().trim(); 
 
-//         if (originalUrl === "") {
-//             Swal.fire("Error", "Please enter a URL!", "error");
-//             return;
-//         };
+    //     if (originalUrl === "") {
+    //         Swal.fire("Error", "Please enter a URL!", "error");
+    //         return;
+    //     };
 
-//         $.ajax({
-//             url: "http://127.0.0.1:8000/api/shorten-url/", 
-//             type: "POST",
-//             contentType: "application/json",
-//             data: JSON.stringify({ origin_url: originalUrl }),
-//             success: function (response) {
-//                 Swal.fire("Success", "URL successfully shortened!", "success");
+    //     $.ajax({
+    //         url: "http://127.0.0.1:8000/api/shorten-url/", 
+    //         type: "POST",
+    //         contentType: "application/json",
+    //         data: JSON.stringify({ origin_url: originalUrl }),
+    //         success: function (response) {
+    //             Swal.fire("Success", "URL successfully shortened!", "success");
 
-//                 $("#input_url").val("");
+    //             $("#input_url").val("");
 
-//                 table.ajax.reload();
-//             },
-//             error: function (xhr) {
-//                 Swal.fire("Error", "Failed to shorten URL: " + xhr.responseText, "error");
-//             }
-//         });
-//     });
+    //             table.ajax.reload();
+    //         },
+    //         error: function (xhr) {
+    //             Swal.fire("Error", "Failed to shorten URL: " + xhr.responseText, "error");
+    //         }
+    //     });
+    // });
 
 
 

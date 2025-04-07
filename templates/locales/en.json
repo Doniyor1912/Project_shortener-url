@@ -1,9 +1,10 @@
 {
-    "login": "Login",
-    "register": "Register",
+    "login1": "Login",
+    "register1": "Register",
     "welcome": "Shorten Your Loooong Links :)",
     "welcome_text": "Linkly is an efficient and easy-to-use URL shortening service that streamlines your online experience.",
     "input_text": "Enter the link here",
+    "shortener_btn": "Shorten!",
     "short-url_title": "Your short URL is ready!",
     "short-url_text": "Click the link to open or use the buttons to share easily!",
     "datatable_title":"You can create 05 more links. Register Now to enjoy Unlimited usage",
@@ -14,6 +15,56 @@
     "data_status":"Status",
     "data_date":"Date",
     "last_register": "Register Now",
-    "last_register-text": "to enjoy Unlimited History"
+    "last_register-text": "to enjoy Unlimited History",
+
+
+    "login_title":"Login!",
+    "login_username":"Username",
+    "login_password":"Password",
+    "login_register_link":"Don't have an account? Register",
+    "login_submit":"Login",
+    "login_cancel":"Cancel",
+
+
+
+    "register_title":"Register Account!",
+    "register_username":"Username",
+    "email_password":"Email",
+    "register_password":"Password",
+    "register_confirm_password":"Confirm Password",
+    "register_register_link":"Don't have an account? Login",
+
+
+
+
+    "main_input_placeholder": "Enter the link here",
+    "main_button_shorten": "Shorten Now!",
+    "main_short_url_title": "Your short URL is ready!",
+    "main_welcome": "Welcome!",
+    "main_profile_view": "View Profile",
+    "main_profile_logout": "Logout",
+    "main_filter_button": "Filter",
+    "main_filter_title": "Filter Options",
+    "main_filter_short_link": "Short Link:",
+    "main_filter_short_link_placeholder": "Search by Short Link",
+    "main_filter_status": "Status:",
+    "main_filter_status_all": "All Status",
+    "main_filter_status_active": "Active",
+    "main_filter_status_inactive": "Inactive",
+    "main_filter_start_date": "Start Date:",
+    "main_filter_end_date": "End Date:",
+    "main_filter_apply": "Apply Filter",
+    "main_filter_clear": "Clear Filters",
+    "main_history_title": "History ({count})",
+    "main_table_history": "History",
+    "main_table_short_link": "Short Link",
+    "main_table_original_link": "Original Link",
+    "main_table_clicks": "Clicks",
+    "main_table_qr_code": "QR Code",
+    "main_table_status": "Status",
+    "main_table_date": "Date",
+    "main_table_actions": "Actions"
+
+
   }
   

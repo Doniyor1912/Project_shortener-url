@@ -1,15 +1,18 @@
-from django.urls import path, include
-from rest_framework import routers
-from .views import URLShortener, URLDetails, RedirectShortURLView
-
-router = routers.SimpleRouter()
-router.register('',URLDetails, basename="shorten_urls")
+from django.urls import path
+from .views import *
 
 urlpatterns = [
-    path('shorten/', URLShortener.as_view(), name='shorten_url'),
-    path('<str:shorten_url>/', RedirectShortURLView.as_view(), name='redirect-url'),
-    path('shorten/urls/', include(router.urls)),
-    path('shorten/get-all/', include(router.urls), name='shorten'),
+    # short url create and get list urls:
+    path('shorter/', ShortenURLCreateView.as_view(), name='shorten-url'),
+    path('shorten/list/', UserShortUrlListView.as_view(), name='user-short-url-list'),  # Faqat GET uchun
 
+    # Actions urls:
+    path('shorten/delete/<int:pk>/', UserShortUrlActionDestroyView.as_view(), name='user-short-url-action'),  # Delete uchun
+    path('status/update/<int:pk>/', UserShortUrlActionDestroyView.as_view(), name='user-short-url-status-action'),  # Update uchun
+
+    # short link to org link url:
+    path('<str:short_link>/', RedirectShortURLView.as_view(), name='redirect-url'),
+
+    path("get-url-count/", get_url_count, name="get-url-count"),
 
 ]
